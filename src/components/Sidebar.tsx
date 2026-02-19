@@ -82,7 +82,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
               src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=${avatarBg}&color=fff`}
               className="w-10 h-10 rounded-full"
             />
-            <div className="hidden sm:block">
+            <div className=" sm:block">
               <p className="text-sm font-medium">{userName.split(" ")[0]}</p>
               <p className="text-xs text-gray-500">Student</p>
             </div>

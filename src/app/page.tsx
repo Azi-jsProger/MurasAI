@@ -38,7 +38,7 @@ function StatCard({ title, value, color }: any) {
   return (
     <div className={`bg-gradient-to-r ${color} text-white p-4 sm:p-6 rounded-2xl shadow-lg`}>
       <p className="text-xs sm:text-sm opacity-80">{title}</p>
-      <p className="text-xl sm:text-2xl font-semibold">{value}</p>
+      <p className="text-[18px] sm:text-2xl font-semibold">{value}</p>
     </div>
   );
 }

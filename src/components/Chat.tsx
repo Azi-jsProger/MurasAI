@@ -9,7 +9,6 @@ export default function ChatFullScreen() {
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Автоскролл к последнему сообщению
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatLog]);
@@ -26,7 +25,7 @@ export default function ChatFullScreen() {
       const data = await sendChat(message);
       const botMessage = { role: "assistant", content: data.reply };
       setChatLog((prev) => [...prev, botMessage]);
-    } catch (err) {
+    } catch {
       setChatLog((prev) => [
         ...prev,
         { role: "assistant", content: "Ошибка: не удалось получить ответ." },
@@ -41,16 +40,18 @@ export default function ChatFullScreen() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-gray-50">
-      {/* Чат */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
+    <div className="flex flex-col h-full">
+      {/* Сообщения */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-8 py-6 space-y-4">
         {chatLog.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            className={`flex ${
+              msg.role === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div
-              className={`max-w-[90%] sm:max-w-[70%] px-4 py-3 sm:px-6 sm:py-4 rounded-xl break-words ${
+              className={`max-w-[95%] sm:max-w-[65%] px-4 py-3 sm:px-6 sm:py-4 rounded-2xl break-words text-sm sm:text-base ${
                 msg.role === "user"
                   ? "bg-indigo-600 text-white rounded-br-none"
                   : "bg-white text-gray-800 rounded-bl-none shadow"
@@ -63,23 +64,25 @@ export default function ChatFullScreen() {
         <div ref={chatEndRef} />
       </div>
 
-      {/* Ввод сообщения */}
-      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 p-4 bg-gray-100 border-t border-gray-200">
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message..."
-          className="flex-1 px-4 py-3 sm:px-5 sm:py-4 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        />
-        <button
-          onClick={handleSend}
-          disabled={loading}
-          className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition disabled:opacity-50"
-        >
-          {loading ? "Sending..." : "Send"}
-        </button>
+      {/* Поле ввода */}
+      <div className="sticky bottom-0 bg-white border-t border-gray-200 p-3 sm:p-4">
+        <div className="flex gap-2 sm:gap-3">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Введите сообщение..."
+            className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <button
+            onClick={handleSend}
+            disabled={loading}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 sm:px-6 py-3 rounded-xl font-semibold transition disabled:opacity-50 text-[12px] sm:text-sm"
+          >
+            {loading ? "..." : "Отправить"}
+          </button>
+        </div>
       </div>
     </div>
   );
