@@ -1,19 +1,23 @@
 "use client";
 
+import { useContext } from "react";
+import { UserContext } from "@/context/UserContext";
+
 export default function Personal() {
+  const { userName, avatarBg } = useContext(UserContext);
+
   return (
     <div className="p-8 space-y-8">
-
       <h1 className="text-3xl font-bold">👤 Личная карточка</h1>
 
       <div className="bg-white p-8 rounded-2xl shadow-md flex items-center gap-8">
         <img
-          src="https://ui-avatars.com/api/?name=Aziret+O&background=6366F1&color=fff"
+          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=${avatarBg}&color=fff`}
           className="w-28 h-28 rounded-full shadow-lg"
         />
 
         <div>
-          <h2 className="text-2xl font-semibold">Aziret O.</h2>
+          <h2 className="text-2xl font-semibold">{userName}</h2>
           <p className="text-gray-500">Студент • MurasAI User</p>
 
           <div className="mt-4 bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full inline-block text-sm font-medium">
@@ -38,7 +42,6 @@ export default function Personal() {
           Daily micro-tests will increase your score by +5%.
         </p>
       </div>
-
     </div>
   );
 }
