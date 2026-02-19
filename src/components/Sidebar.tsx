@@ -41,7 +41,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-screen flex flex-col w-64 bg-white border-r shadow-lg transform transition-transform duration-300 sm:relative sm:translate-x-0 z-50",
+          "fixed top-0 left-0 h-[100vh] flex flex-col w-64 bg-white border-r shadow-lg transform transition-transform duration-300 sm:relative sm:translate-x-0 z-50",
           open ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
         )}
       >

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { UserProvider } from "@/context/UserContext";
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "MurasAI LMS",
@@ -15,12 +16,19 @@ export const metadata: Metadata = {
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html>
       <body className={`${inter.className} bg-gray-100`}>
         <UserProvider>
-          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
+          <ClientLayoutWrapper>
+            {children}
+            <Providers />
+          </ClientLayoutWrapper>
         </UserProvider>
       </body>
     </html>

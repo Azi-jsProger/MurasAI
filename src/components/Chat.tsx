@@ -9,6 +9,7 @@ export default function ChatFullScreen() {
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Автоскролл к последнему сообщению
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatLog]);
@@ -16,6 +17,7 @@ export default function ChatFullScreen() {
   const handleSend = async () => {
     if (!message.trim()) return;
 
+    // Добавляем сообщение пользователя
     const userMessage = { role: "user", content: message };
     setChatLog((prev) => [...prev, userMessage]);
     setMessage("");
@@ -23,14 +25,25 @@ export default function ChatFullScreen() {
 
     try {
       const data = await sendChat(message);
-      const botMessage = { role: "assistant", content: data.reply };
-      setChatLog((prev) => [...prev, botMessage]);
+
+      // Если AI вернул корректный ответ, добавляем его
+      if (data?.reply) {
+        setChatLog((prev) => [
+          ...prev,
+          { role: "assistant", content: data.reply },
+        ]);
+      }
     } catch {
-      setChatLog((prev) => [
-        ...prev,
-        { role: "assistant", content: "Ошибка: не удалось получить ответ." },
-      ]);
+      // Не добавляем сообщение AI при ошибке
+      console.error("Ошибка при отправке на AI");
     } finally {
+      // В любом случае добавляем сообщение поддержки
+      const supportMessage = {
+        role: "assistant",
+        content:
+          "Спасибо за сообщение! 🌟 Поддержите нас, чтобы мы могли развивать AI ассистента.",
+      };
+      setChatLog((prev) => [...prev, supportMessage]);
       setLoading(false);
     }
   };
