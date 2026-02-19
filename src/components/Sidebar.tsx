@@ -37,6 +37,11 @@ export default function Sidebar() {
           <Link href="/personal" className={linkClass("/personal")}>
             Личная карточка
           </Link>
+
+          <Link href="/analytics" className={linkClass("/analytics")}>
+            Аналитика
+          </Link>
+
           <Link href="/webtest" className={linkClass("/webtest")}>
             Тестирование
           </Link>
