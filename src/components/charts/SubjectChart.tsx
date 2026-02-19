@@ -12,10 +12,10 @@ import {
 } from "recharts";
 
 const subjectData = [
-  { subject: "Math", score: 85 },
-  { subject: "Physics", score: 70 },
-  { subject: "Biology", score: 92 },
-  { subject: "Chemistry", score: 75 },
+  { subject: "Матиматика", score: 85 },
+  { subject: "Физика", score: 70 },
+  { subject: "Биология", score: 92 },
+  { subject: "Химия", score: 75 },
 ];
 
 const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444"];

@@ -11,10 +11,10 @@ import {
 } from "recharts";
 
 const data = [
-  { week: "Week 1", score: 60 },
-  { week: "Week 2", score: 72 },
-  { week: "Week 3", score: 78 },
-  { week: "Week 4", score: 85 },
+  { week: "Неделя 1", score: 60 },
+  { week: "Неделя 2", score: 72 },
+  { week: "Неделя 3", score: 78 },
+  { week: "Неделя 4", score: 85 },
 ];
 
 export default function ProgressChart() {

@@ -1,34 +1,26 @@
+// layout.tsx
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { UserProvider } from "@/context/UserContext";
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 export const metadata: Metadata = {
   title: "MurasAI LMS",
-  description: "Platform AI",
+  description: "Platform  AI",
   icons: {
     icon: "murasAI_icon.jpg",
   },
 };
 
-const inter = Inter({
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html>
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-gray-100`}>
         <UserProvider>
-          <div className="flex h-screen bg-gray-100">
-            <Sidebar />
-            <main className="flex-1 p-6 overflow-auto">{children}</main>
-          </div>
+          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </UserProvider>
       </body>
     </html>
