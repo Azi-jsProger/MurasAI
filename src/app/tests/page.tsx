@@ -1,13 +1,7 @@
 import React from 'react'
 
-const page = () => {
+export default function Tests() {
   return (
-    <div>
-        <h1>
-            Hello
-        </h1>
-    </div>
+    <div>Tests</div>
   )
 }
-
-export default page

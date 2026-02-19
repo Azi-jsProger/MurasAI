@@ -1,17 +1,18 @@
-const API = "http://localhost:8000";
-
-export async function sendChat(message: string, history: any[]) {
-
-  const res = await fetch(`${API}/ai/chat`, {
+export async function sendChat(message: string) {
+  const res = await fetch("/api/chat", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      message,
-      history
-    })
+    body: JSON.stringify({ message }),
   });
 
-  return res.json();
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Server error:", text);
+    throw new Error("Server error");
+  }
+
+  const data = await res.json();
+  return data;
 }
