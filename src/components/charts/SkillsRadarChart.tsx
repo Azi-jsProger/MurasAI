@@ -10,11 +10,11 @@ import {
 } from "recharts";
 
 const skillsData = [
-  { skill: "Logic", value: 85 },
-  { skill: "Creativity", value: 75 },
-  { skill: "Memory", value: 90 },
-  { skill: "Speed", value: 70 },
-  { skill: "Analysis", value: 88 },
+  { skill: "Логика", value: 85 },
+  { skill: "Криативность", value: 75 },
+  { skill: "Память", value: 90 },
+  { skill: "Скорость", value: 70 },
+  { skill: "Анализ", value: 88 },
 ];
 
 export default function SkillsRadarChart() {

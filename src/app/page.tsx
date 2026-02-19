@@ -19,14 +19,14 @@ export default function Dashboard() {
       {/* Статистика */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
         <StatCard title="Средний балл" value="82%" color="from-indigo-500 to-purple-600" />
-        <StatCard title="AI Рейтинг" value="Advanced" color="from-emerald-500 to-teal-600" />
+        <StatCard title="AI Рейтинг" value="Продвинутый" color="from-emerald-500 to-teal-600" />
         <StatCard title="Пройдено тестов" value="24" color="from-orange-500 to-pink-500" />
-        <StatCard title="Часы обучения" value="56h" color="from-blue-500 to-cyan-500" />
+        <StatCard title="Часы обучения" value="56ч" color="from-blue-500 to-cyan-500" />
       </div>
 
       {/* Основные модули */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        <ModuleCard icon={Bot} color="text-indigo-500" title="ИИ Ассистент" description="Задавайте вопросы, получайте объяснения и мгновенно улучшайте свои навыки с помощью ИИ." />
+        <ModuleCard icon={Bot} color="text-indigo-500" title="ИИ Ассистент" description="Задавайте вопросы, получайте объяснения и мгновенно улучшайте свои навыки с помощью AI." />
         <ModuleCard icon={FileText} color="text-emerald-500" title="Генератор Теста" description="Создавайте интеллектуальные викторины на основе ваших слабых мест в изучении тем." />
         <ModuleCard icon={CalendarDays} color="text-orange-500" title="Планировщик исследований" description="Искусственный интеллект создаст для вас персонализированное расписание занятий." />
       </div>

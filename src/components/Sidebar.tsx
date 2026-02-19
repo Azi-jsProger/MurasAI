@@ -62,7 +62,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         </div>
 
         <nav className="flex flex-col gap-1 p-4 sm:p-6 font-normal">
-          <Link href="/" className={linkClass("/")}>Dashboard</Link>
+          <Link href="/" className={linkClass("/")}>Главная</Link>
           <Link href="/schedule" className={linkClass("/schedule")}>Расписание</Link>
           <Link href="/personal" className={linkClass("/personal")}>Личная карточка</Link>
           <Link href="/analytics" className={linkClass("/analytics")}>Аналитика</Link>

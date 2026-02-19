@@ -15,7 +15,7 @@ export default function AnalyticsPage() {
           { title: "Средний балл", value: "82%" },
           { title: "AI Рейтинг", value: "Продвинутый" },
           { title: "Пройдено тестов", value: "24" },
-          { title: "Часы обучения", value: "56h" },
+          { title: "Часы обучения", value: "56ч" },
         ].map((card, i) => (
           <div key={i} className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm">
             <p className="text-sm text-gray-500">{card.title}</p>

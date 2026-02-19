@@ -2,9 +2,9 @@
 
 export default function WebTest() {
   const tests = [
-    { title: "Алгебра", difficulty: "Medium", progress: 70 },
-    { title: "Физика", difficulty: "Hard", progress: 40 },
-    { title: "История", difficulty: "Easy", progress: 100 },
+    { title: "Алгебра", difficulty: "Средний", progress: 70 },
+    { title: "Физика", difficulty: "Сложный", progress: 40 },
+    { title: "История", difficulty: "Лёгкий", progress: 100 },
   ];
 
   return (
@@ -19,7 +19,7 @@ export default function WebTest() {
           >
             <h2 className="font-semibold mb-2 text-lg sm:text-xl">{test.title}</h2>
             <p className="text-gray-500 mb-2 text-sm sm:text-base">
-              Difficulty: {test.difficulty}
+              Сложность: {test.difficulty}
             </p>
 
             <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
@@ -30,7 +30,7 @@ export default function WebTest() {
             </div>
 
             <button className="w-full bg-blue-500 text-white px-4 py-2 sm:px-5 sm:py-3 rounded mt-2 hover:bg-blue-600 transition">
-              Start Test
+              Начать тест
             </button>
           </div>
         ))}

@@ -55,7 +55,7 @@ export default function Personal() {
       {/* AI анализ */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 sm:p-8 rounded-2xl shadow-lg">
         <h3 className="font-semibold mb-1 sm:mb-2 text-base sm:text-lg">
-          🧠 ИИ-анализ
+          🧠 AI-анализ
         </h3>
         <p className="opacity-90 text-xs sm:text-sm">
           У вас отличный темп обучения. На этой неделе сосредоточьтесь на
