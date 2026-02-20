@@ -19,7 +19,7 @@ export default function Personal() {
         <div className="text-center sm:text-left">
           <h2 className="text-xl sm:text-2xl font-semibold">{userName}</h2>
           <p className="text-gray-500 text-sm sm:text-base">
-            Студент • MurasAI Подьзователь
+            Студент • MurasAI Пользователь
           </p>
 
           <div className="mt-2 sm:mt-4 bg-indigo-100 text-indigo-700 px-3 py-1 sm:px-4 sm:py-2 rounded-full inline-block text-xs sm:text-sm font-medium">
