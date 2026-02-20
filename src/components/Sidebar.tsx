@@ -8,6 +8,8 @@ import icon from "../../public/murasAI_icon.jpg";
 import { useState, useContext } from "react";
 import { Settings, LogOut, X } from "lucide-react";
 import { UserContext } from "@/context/UserContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { translations } from "@/locales";
 
 interface SidebarProps {
   open: boolean;
@@ -19,7 +21,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
   const { userName, avatarBg } = useContext(UserContext);
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [language, setLanguage] = useState("en");
+
+  const { language, setLanguage } = useLanguage();
+  const t = translations[language];
 
   const linkClass = (path: string) =>
     cn(
@@ -31,7 +35,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
   return (
     <>
-      {/* Overlay для мобильных — ниже Sidebar по z-index */}
+      {/* Overlay для мобильных */}
       <div
         className={cn(
           "fixed inset-0 bg-black bg-opacity-30 transition-opacity sm:hidden z-40",
@@ -47,7 +51,6 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           open ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
         )}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b">
           <Link href="/" className="flex items-center gap-3">
             <Image src={icon} alt="icon" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full" />
@@ -63,14 +66,14 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         </div>
 
         <nav className="flex flex-col gap-1 p-4 sm:p-6 font-normal">
-          <Link href="/" className={linkClass("/")}>Главная</Link>
-          <Link href="/schedule" className={linkClass("/schedule")}>Расписание</Link>
-          <Link href="/personal" className={linkClass("/personal")}>Личная карточка</Link>
-          <Link href="/analytics" className={linkClass("/analytics")}>Аналитика</Link>
-          <Link href="/webtest" className={linkClass("/webtest")}>Тестирование</Link>
-          <Link href="/chat" className={linkClass("/chat")}>AI помощник</Link>
-          <Link href="/tests" className={linkClass("/tests")}>Генератор тестов</Link>
-          <Link href="/plan" className={linkClass("/plan")}>План подготовки</Link>
+          <Link href="/" className={linkClass("/")}>{t.home}</Link>
+          <Link href="/schedule" className={linkClass("/schedule")}>{t.schedule}</Link>
+          <Link href="/personal" className={linkClass("/personal")}>{t.personal}</Link>
+          <Link href="/analytics" className={linkClass("/analytics")}>{t.analytics}</Link>
+          <Link href="/webtest" className={linkClass("/webtest")}>{t.webtest}</Link>
+          <Link href="/chat" className={linkClass("/chat")}>{t.chat}</Link>
+          <Link href="/tests" className={linkClass("/tests")}>{t.tests}</Link>
+          <Link href="/plan" className={linkClass("/plan")}>{t.plan}</Link>
         </nav>
 
         {/* Профиль */}
@@ -85,7 +88,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             />
             <div className="sm:block">
               <p className="text-sm font-medium">{userName.split(" ")[0]}</p>
-              <p className="text-xs text-gray-500">Student</p>
+              <p className="text-xs text-gray-500">{t.student}</p>
             </div>
           </div>
 
@@ -96,19 +99,19 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                 onClick={() => setSettingsOpen(true)}
               >
                 <Settings size={16} />
-                Settings
+                {t.settings}
               </button>
 
               <button className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-sm sm:text-base">
                 <LogOut size={16} />
-                Logout
+                {t.logout}
               </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* Полноэкранный Settings Modal с кликом по overlay */}
+      {/* Fullscreen Settings Modal */}
       {settingsOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[8px] bg-opacity-50"
@@ -116,7 +119,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         >
           <div
             className="bg-white rounded-lg w-11/12 max-w-md p-6 relative"
-            onClick={(e) => e.stopPropagation()} // предотвращаем закрытие при клике внутри модала
+            onClick={(e) => e.stopPropagation()} // клик внутри не закрывает
           >
             <button
               className="absolute top-3 right-3 p-1 rounded-md hover:bg-gray-100"
@@ -126,14 +129,14 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             </button>
 
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Settings size={20} /> Настройки
+              <Settings size={20} /> {t.settings}
             </h2>
 
             <div className="flex flex-col gap-4">
-              <label className="text-sm font-medium">Выберите язык:</label>
+              <label className="text-sm font-medium">{t.selectLanguage}:</label>
               <select
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
+                onChange={(e) => setLanguage(e.target.value as "en" | "ru" | "kg")}
                 className="w-full border rounded-md p-2"
               >
                 <option value="en">English</option>
