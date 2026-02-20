@@ -1,34 +1,76 @@
 "use client";
 
 import { Bot, FileText, CalendarDays } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { translations } from "@/locales";
+import Skeleton from "@/components/Skeleton";
 
 export default function Dashboard() {
+  const { language, isLoaded } = useLanguage();
+  const t = translations[language];
+
   return (
-    <div className="p-4 sm:p-6 lg:p-8  space-y-6 sm:space-y-8 mt-10 sm:mt-0">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 mt-10 sm:mt-0">
 
       {/* Заголовок */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold">
-          Приветствуем в MurasAI LMS 🚀
-        </h1>
-        <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">
-          Ваш помощник в обучении на основе искусственного интеллекта
-        </p>
+        {isLoaded ? (
+          <>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+              {t.welcome} 🚀
+            </h1>
+            <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">
+              {t.helperText}
+            </p>
+          </>
+        ) : (
+          <>
+            <Skeleton width="w-3/4" height="h-8" className="mb-2" />
+            <Skeleton width="w-1/2" height="h-4" />
+          </>
+        )}
       </div>
 
       {/* Статистика */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-        <StatCard title="Средний балл" value="82%" color="from-indigo-500 to-purple-600" />
-        <StatCard title="AI Рейтинг" value="Продвинутый" color="from-emerald-500 to-teal-600" />
-        <StatCard title="Пройдено тестов" value="24" color="from-orange-500 to-pink-500" />
-        <StatCard title="Часы обучения" value="56ч" color="from-blue-500 to-cyan-500" />
+        {isLoaded ? (
+          <>
+            <StatCard title={t.avgScore} value="82%" color="from-indigo-500 to-purple-600" />
+            <StatCard title={t.aiRating} value={t.advanced} color="from-emerald-500 to-teal-600" />
+            <StatCard title={t.testsCompleted} value="24" color="from-orange-500 to-pink-500" />
+            <StatCard title={t.learningHours} value={t.hour} color="from-blue-500 to-cyan-500" />
+          </>
+        ) : (
+          Array(4).fill(0).map((_, i) => <Skeleton key={i} width="w-full" height="h-20" className="rounded-2xl" />)
+        )}
       </div>
 
       {/* Основные модули */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        <ModuleCard icon={Bot} color="text-indigo-500" title="ИИ Ассистент" description="Задавайте вопросы, получайте объяснения и мгновенно улучшайте свои навыки с помощью AI." />
-        <ModuleCard icon={FileText} color="text-emerald-500" title="Генератор Теста" description="Создавайте интеллектуальные викторины на основе ваших слабых мест в изучении тем." />
-        <ModuleCard icon={CalendarDays} color="text-orange-500" title="Планировщик исследований" description="Искусственный интеллект создаст для вас персонализированное расписание занятий." />
+        {isLoaded ? (
+          <>
+            <ModuleCard
+              icon={Bot}
+              color="text-indigo-500"
+              title={t.aiAssistant}
+              description={t.aiAssistantDesc}
+            />
+            <ModuleCard
+              icon={FileText}
+              color="text-emerald-500"
+              title={t.testGenerator}
+              description={t.testGeneratorDesc}
+            />
+            <ModuleCard
+              icon={CalendarDays}
+              color="text-orange-500"
+              title={t.studyPlanner}
+              description={t.studyPlannerDesc}
+            />
+          </>
+        ) : (
+          Array(3).fill(0).map((_, i) => <Skeleton key={i} width="w-full" height="h-40" className="rounded-2xl" />)
+        )}
       </div>
     </div>
   );
