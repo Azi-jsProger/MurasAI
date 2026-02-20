@@ -1,18 +1,5 @@
 export const translations = {
-     ru: {
-    home: "Главная",
-    schedule: "Расписание",
-    personal: "Личная карточка",
-    analytics: "Аналитика",
-    webtest: "Тестирование",
-    chat: "AI помощник",
-    tests: "Генератор тестов",
-    plan: "План подготовки",
-    student: "Студент",
-    settings: "Настройки",
-    logout: "Выйти",
-    selectLanguage: "Выберите язык",
-  },en: {
+  en: {
     home: "Home",
     schedule: "Schedule",
     personal: "Profile",
@@ -25,6 +12,20 @@ export const translations = {
     settings: "Settings",
     logout: "Logout",
     selectLanguage: "Select Language",
+  },
+  ru: {
+    home: "Главная",
+    schedule: "Расписание",
+    personal: "Личная карточка",
+    analytics: "Аналитика",
+    webtest: "Тестирование",
+    chat: "AI помощник",
+    tests: "Генератор тестов",
+    plan: "План подготовки",
+    student: "Студент",
+    settings: "Настройки",
+    logout: "Выйти",
+    selectLanguage: "Выберите язык",
   },
   kg: {
     home: "Башкы бет",

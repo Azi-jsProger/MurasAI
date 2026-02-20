@@ -10,6 +10,7 @@ import { Settings, LogOut, X } from "lucide-react";
 import { UserContext } from "@/context/UserContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
+import Skeleton from "./Skeleton";
 
 interface SidebarProps {
   open: boolean;
@@ -22,7 +23,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, isLoaded } = useLanguage();
   const t = translations[language];
 
   const linkClass = (path: string) =>
@@ -35,7 +36,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
   return (
     <>
-      {/* Overlay для мобильных */}
+      {/* Overlay для мобилок */}
       <div
         className={cn(
           "fixed inset-0 bg-black bg-opacity-30 transition-opacity sm:hidden z-40",
@@ -51,11 +52,23 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           open ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
         )}
       >
+        {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b">
-          <Link href="/" className="flex items-center gap-3">
-            <Image src={icon} alt="icon" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full" />
-            <h1 className="text-lg sm:text-xl font-semibold">MurasAI LMS</h1>
-          </Link>
+          {isLoaded ? (
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src={icon}
+                alt="icon"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full"
+              />
+              <h1 className="text-lg sm:text-xl font-semibold">MurasAI LMS</h1>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Skeleton width="w-10" height="h-10" circle />
+              <Skeleton width="w-24" height="h-6" />
+            </div>
+          )}
 
           <button
             className="sm:hidden p-1 rounded-md hover:bg-gray-100"
@@ -65,15 +78,26 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           </button>
         </div>
 
+        {/* Menu */}
         <nav className="flex flex-col gap-1 p-4 sm:p-6 font-normal">
-          <Link href="/" className={linkClass("/")}>{t.home}</Link>
-          <Link href="/schedule" className={linkClass("/schedule")}>{t.schedule}</Link>
-          <Link href="/personal" className={linkClass("/personal")}>{t.personal}</Link>
-          <Link href="/analytics" className={linkClass("/analytics")}>{t.analytics}</Link>
-          <Link href="/webtest" className={linkClass("/webtest")}>{t.webtest}</Link>
-          <Link href="/chat" className={linkClass("/chat")}>{t.chat}</Link>
-          <Link href="/tests" className={linkClass("/tests")}>{t.tests}</Link>
-          <Link href="/plan" className={linkClass("/plan")}>{t.plan}</Link>
+          {isLoaded ? (
+            <>
+              <Link href="/" className={linkClass("/")}>{t.home}</Link>
+              <Link href="/schedule" className={linkClass("/schedule")}>{t.schedule}</Link>
+              <Link href="/personal" className={linkClass("/personal")}>{t.personal}</Link>
+              <Link href="/analytics" className={linkClass("/analytics")}>{t.analytics}</Link>
+              <Link href="/webtest" className={linkClass("/webtest")}>{t.webtest}</Link>
+              <Link href="/chat" className={linkClass("/chat")}>{t.chat}</Link>
+              <Link href="/tests" className={linkClass("/tests")}>{t.tests}</Link>
+              <Link href="/plan" className={linkClass("/plan")}>{t.plan}</Link>
+            </>
+          ) : (
+            <>
+              {Array(8).fill(0).map((_, i) => (
+                <Skeleton key={i} width="w-3/4" height="h-5" className="my-1" />
+              ))}
+            </>
+          )}
         </nav>
 
         {/* Профиль */}
@@ -82,29 +106,40 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             onClick={() => setProfileOpen(!profileOpen)}
             className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100"
           >
-            <img
-              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=${avatarBg}&color=fff`}
-              className="w-10 h-10 rounded-full"
-            />
+            {isLoaded ? (
+              <img
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=${avatarBg}&color=fff`}
+                className="w-10 h-10 rounded-full"
+              />
+            ) : (
+              <Skeleton width="w-10" height="h-10" circle />
+            )}
             <div className="sm:block">
-              <p className="text-sm font-medium">{userName.split(" ")[0]}</p>
-              <p className="text-xs text-gray-500">{t.student}</p>
+              {isLoaded ? (
+                <>
+                  <p className="text-sm font-medium">{userName.split(" ")[0]}</p>
+                  <p className="text-xs text-gray-500">{t.student}</p>
+                </>
+              ) : (
+                <>
+                  <Skeleton width="w-16" height="h-4" />
+                  <Skeleton width="w-10" height="h-3" />
+                </>
+              )}
             </div>
           </div>
 
           {profileOpen && (
-            <div className="absolute bottom-14 left-0 w-full bg-white shadow rounded-lg p-2 sm:p-3">
+            <div className="absolute bottom-14 left-0 w-full bg-white shadow rounded-lg p-2 sm:p-3 z-50">
               <button
                 className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-sm sm:text-base"
                 onClick={() => setSettingsOpen(true)}
               >
-                <Settings size={16} />
-                {t.settings}
+                <Settings size={16} /> {t.settings}
               </button>
 
               <button className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-sm sm:text-base">
-                <LogOut size={16} />
-                {t.logout}
+                <LogOut size={16} /> {t.logout}
               </button>
             </div>
           )}
@@ -114,12 +149,12 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       {/* Fullscreen Settings Modal */}
       {settingsOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[8px] bg-opacity-50"
-          onClick={() => setSettingsOpen(false)} // клик по overlay закрывает
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[8px] bg-opacity-60"
+          onClick={() => setSettingsOpen(false)}
         >
           <div
             className="bg-white rounded-lg w-11/12 max-w-md p-6 relative"
-            onClick={(e) => e.stopPropagation()} // клик внутри не закрывает
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               className="absolute top-3 right-3 p-1 rounded-md hover:bg-gray-100"
