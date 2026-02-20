@@ -18,6 +18,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
   const pathname = usePathname();
   const { userName, avatarBg } = useContext(UserContext);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [language, setLanguage] = useState("en");
 
   const linkClass = (path: string) =>
     cn(
@@ -52,7 +54,6 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             <h1 className="text-lg sm:text-xl font-semibold">MurasAI LMS</h1>
           </Link>
 
-          {/* Кнопка закрытия на мобилке */}
           <button
             className="sm:hidden p-1 rounded-md hover:bg-gray-100"
             onClick={() => setOpen(false)}
@@ -69,7 +70,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           <Link href="/webtest" className={linkClass("/webtest")}>Тестирование</Link>
           <Link href="/chat" className={linkClass("/chat")}>AI помощник</Link>
           <Link href="/tests" className={linkClass("/tests")}>Генератор тестов</Link>
-          <Link href="/plan" className={linkClass("/study-plan")}>План подготовки</Link>
+          <Link href="/plan" className={linkClass("/plan")}>План подготовки</Link>
         </nav>
 
         {/* Профиль */}
@@ -82,7 +83,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
               src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=${avatarBg}&color=fff`}
               className="w-10 h-10 rounded-full"
             />
-            <div className=" sm:block">
+            <div className="sm:block">
               <p className="text-sm font-medium">{userName.split(" ")[0]}</p>
               <p className="text-xs text-gray-500">Student</p>
             </div>
@@ -90,7 +91,10 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
           {profileOpen && (
             <div className="absolute bottom-14 left-0 w-full bg-white shadow rounded-lg p-2 sm:p-3">
-              <button className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-sm sm:text-base">
+              <button
+                className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-sm sm:text-base"
+                onClick={() => setSettingsOpen(true)}
+              >
                 <Settings size={16} />
                 Settings
               </button>
@@ -103,6 +107,43 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           )}
         </div>
       </div>
+
+      {/* Полноэкранный Settings Modal с кликом по overlay */}
+      {settingsOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[8px] bg-opacity-50"
+          onClick={() => setSettingsOpen(false)} // клик по overlay закрывает
+        >
+          <div
+            className="bg-white rounded-lg w-11/12 max-w-md p-6 relative"
+            onClick={(e) => e.stopPropagation()} // предотвращаем закрытие при клике внутри модала
+          >
+            <button
+              className="absolute top-3 right-3 p-1 rounded-md hover:bg-gray-100"
+              onClick={() => setSettingsOpen(false)}
+            >
+              <X size={20} />
+            </button>
+
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Settings size={20} /> Настройки
+            </h2>
+
+            <div className="flex flex-col gap-4">
+              <label className="text-sm font-medium">Выберите язык:</label>
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="w-full border rounded-md p-2"
+              >
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+                <option value="kg">Кыргызча</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
