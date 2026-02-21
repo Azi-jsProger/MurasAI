@@ -45,15 +45,15 @@ export default function SubjectChart() {
   }));
 
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md">
+    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md">
       <h2 className="text-base sm:text-lg font-semibold mb-4">{t.subjectScores}</h2>
       <div className="h-[240px] sm:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={translatedData} margin={{ top: 10, right: 20, left: 0, bottom: isMobile ? 40 : 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-            <XAxis dataKey="subject" interval={0} textAnchor={isMobile ? "end" : "middle"} tick={{ fontSize: isMobile ? 11 : 13 }} />
+            <XAxis  dataKey="subject" interval={0} textAnchor={isMobile ? "end" : "middle"} tick={{ fontSize: isMobile ? 11 : 13 }} />
             <YAxis tick={{ fontSize: isMobile ? 11 : 14 }} width={isMobile ? 30 : 40} />
-            <Tooltip />
+            <Tooltip labelClassName="text-black"/>
             <Bar dataKey="score" radius={[12, 12, 0, 0]}>
               {translatedData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

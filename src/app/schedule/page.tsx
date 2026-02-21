@@ -8,8 +8,6 @@ import Skeleton from "@/components/Skeleton";
 
 export default function Schedule() {
   const { language, isLoaded } = useLanguage();
-
-  // ✅ БЕЗ as Record<string,string>
   const t = translations[language];
 
   const schedule = [
@@ -99,7 +97,7 @@ export default function Schedule() {
 
   function handleMouseEnter(
     event: React.MouseEvent<HTMLLIElement>,
-    time: string
+    time: string,
   ) {
     const rect = event.currentTarget.getBoundingClientRect();
     setTooltip({
@@ -115,15 +113,15 @@ export default function Schedule() {
   }
 
   return (
-    <div className="p-4 space-y-6 mt-10 relative">
-      <div className="flex items-center gap-3">
-        <Calendar size={28} className="text-indigo-500" />
+    <div className="p-6 mt-10 space-y-8 relative">
+      <div className="flex items-center gap-4">
+        <Calendar size={28} className="text-gray-800 dark:text-gray-200" />
         {isLoaded ? (
-          <h1 className="text-2xl font-bold text-indigo-700">
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100">
             {t.schedule}
           </h1>
         ) : (
-          <Skeleton width="w-40" height="h-8" />
+          <Skeleton width="w-44" height="h-10" />
         )}
       </div>
 
@@ -132,26 +130,23 @@ export default function Schedule() {
           ? schedule.map((day, i) => (
               <div
                 key={i}
-                className="bg-indigo-100 p-4 rounded-2xl shadow-md"
+                className="bg-gradient-to-tr from-white-500 to-white-400 dark:from-indigo-500 dark:to-purple-500 p-5 rounded-3xl shadow-lg hover:scale-105 transform transition-all duration-300"
               >
-                <h2 className="font-semibold mb-4 text-lg flex items-center gap-2">
+                <h2 className="font-semibold mb-5 text-lg flex items-center gap-2 text-black">
                   <Calendar size={18} /> {dayMap[day.day]}
                 </h2>
 
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {day.lessons.map((lesson, j) => {
                     const lessonKey = lesson.name.toLowerCase();
                     const color =
-                      lessonColors[lessonKey] ||
-                      "from-gray-400 to-gray-600";
+                      lessonColors[lessonKey] || "from-gray-400 to-gray-600";
 
                     return (
                       <li
                         key={j}
-                        className={`flex items-center gap-2 text-white bg-gradient-to-r ${color} px-4 py-2 rounded-full text-sm`}
-                        onMouseEnter={(e) =>
-                          handleMouseEnter(e, lesson.time)
-                        }
+                        className={`flex items-center gap-3 text-white bg-gradient-to-r ${color} px-4 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-lg hover:scale-105 transform transition-all duration-200 cursor-pointer`}
+                        onMouseEnter={(e) => handleMouseEnter(e, lesson.time)}
                         onMouseLeave={handleMouseLeave}
                       >
                         <BookOpen size={16} />
@@ -167,14 +162,14 @@ export default function Schedule() {
               .map((_, i) => (
                 <div
                   key={i}
-                  className="bg-gray-200 rounded-2xl p-4 animate-pulse h-48"
+                  className="bg-gray-200 rounded-3xl p-5 animate-pulse h-52"
                 />
               ))}
       </div>
 
       {tooltip.visible && (
         <div
-          className="fixed z-50 bg-gray-800 text-white text-xs rounded-md px-3 py-1 shadow-lg"
+          className="fixed z-50 bg-gray-900 text-white text-xs rounded-md px-3 py-1 shadow-lg pointer-events-none opacity-90"
           style={{
             top: tooltip.y,
             left: tooltip.x,

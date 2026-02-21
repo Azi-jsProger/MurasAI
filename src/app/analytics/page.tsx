@@ -32,7 +32,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {isLoaded
           ? stats.map((card, i) => (
-              <div key={i} className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm">
+              <div key={i} className="bg-white dark:bg-gray-700 p-4 sm:p-6 rounded-2xl shadow-sm">
                 <p className="text-sm text-gray-500">{card.title}</p>
                 <p className="text-xl sm:text-2xl font-semibold">{card.value}</p>
               </div>

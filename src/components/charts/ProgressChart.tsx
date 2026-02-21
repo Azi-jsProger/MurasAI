@@ -37,7 +37,7 @@ export default function ProgressChart() {
     return <Skeleton width="w-full" height="h-64" className="rounded-2xl" />;
 
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md">
+    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md">
       <h2 className="text-base sm:text-lg font-semibold mb-4">
         {t.progressWeeks}
       </h2>

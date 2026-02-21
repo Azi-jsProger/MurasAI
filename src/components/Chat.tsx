@@ -77,7 +77,7 @@ export default function ChatFullScreen() {
               <div
                 className={`max-w-[95%] sm:max-w-[65%] px-4 py-3 sm:px-6 sm:py-4 rounded-2xl break-words text-sm sm:text-base ${
                   msg.role === "user"
-                    ? "bg-indigo-600 text-white rounded-br-none"
+                    ? "bg-indigo-600 text-white rounded-br-none dark:bg-gray-600"
                     : "bg-white text-gray-800 rounded-bl-none shadow"
                 }`}
               >
@@ -88,7 +88,7 @@ export default function ChatFullScreen() {
         <div ref={chatEndRef} />
       </div>
 
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 p-3 sm:p-4">
+      <div className="sticky bottom-0 bg-white dark:bg-gray-700 dark:border-gray-700 border-t border-gray-200 p-3 sm:p-4">
         <div className="flex gap-2 sm:gap-3">
           <input
             type="text"
@@ -96,7 +96,7 @@ export default function ChatFullScreen() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t.chatPlaceholder}
-            className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex-1 px-4 py-3 rounded-xl border border-gray-300  focus:outline-none  focus:ring-2 focus:ring-indigo-500  dark:focus:border-gray-600"
           />
           <button
             onClick={handleSend}

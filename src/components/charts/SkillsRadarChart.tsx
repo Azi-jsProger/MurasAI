@@ -42,13 +42,13 @@ export default function SkillsRadarChart() {
   }));
 
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md">
+    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md">
       <h2 className="text-base sm:text-lg font-semibold mb-4">{t.skillsRadar}</h2>
       <div className="h-[260px] sm:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={translatedSkills} outerRadius={isMobile ? "54%" : "80%"}>
-            <PolarGrid stroke="#e5e7eb" />
-            <PolarAngleAxis dataKey="skill" tick={{ fontSize: isMobile ? 11 : 14, fill: "#6b7280" }} />
+            <PolarGrid stroke="#e5e7eb"  />
+            <PolarAngleAxis dataKey="skill"  tick={{ fontSize: isMobile ? 11 : 14, fill: "#6b7280" }} />
             <PolarRadiusAxis tick={{ fontSize: isMobile ? 10 : 12, fill: "#6b7280" }} />
             <Radar dataKey="value" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.6} />
           </RadarChart>

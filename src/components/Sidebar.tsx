@@ -11,6 +11,7 @@ import { UserContext } from "@/context/UserContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "./Skeleton";
+import { useTheme } from "@/context/ThemeContext";
 
 interface SidebarProps {
   open: boolean;
@@ -22,6 +23,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
   const { userName, avatarBg } = useContext(UserContext);
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const { language, setLanguage, isLoaded } = useLanguage();
   const t = translations[language];
@@ -30,8 +32,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
     cn(
       "px-3 py-2 rounded-lg text-sm transition-colors",
       pathname === path
-        ? "bg-gray-100 font-medium"
-        : "text-gray-600 hover:bg-gray-100 hover:text-black"
+        ? "bg-gray-100 dark:bg-gray-600 font-medium"
+        : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white",
     );
 
   return (
@@ -40,7 +42,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       <div
         className={cn(
           "fixed inset-0 bg-black bg-opacity-30 transition-opacity sm:hidden z-40",
-          open ? "opacity-100 visible" : "opacity-0 invisible"
+          open ? "opacity-100 visible" : "opacity-0 invisible",
         )}
         onClick={() => setOpen(false)}
       ></div>
@@ -48,8 +50,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-[100vh] flex flex-col w-64 bg-white border-r shadow-lg transform transition-transform duration-300 sm:relative sm:translate-x-0 z-50",
-          open ? "translate-x-0" : "-translate-x-full sm:translate-x-0"
+          "fixed top-0 left-0 h-[100vh] flex flex-col w-64 bg-white dark:bg-gray-800 border-r dark:border-gray-700 shadow-lg transform transition-transform duration-300 sm:relative sm:translate-x-0 z-50",
+          open ? "translate-x-0" : "-translate-x-full sm:translate-x-0",
         )}
       >
         {/* Header */}
@@ -82,20 +84,43 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         <nav className="flex flex-col gap-1 p-4 sm:p-6 font-normal">
           {isLoaded ? (
             <>
-              <Link href="/" className={linkClass("/")}>{t.home}</Link>
-              <Link href="/schedule" className={linkClass("/schedule")}>{t.schedule}</Link>
-              <Link href="/personal" className={linkClass("/personal")}>{t.personal}</Link>
-              <Link href="/analytics" className={linkClass("/analytics")}>{t.analytics}</Link>
-              <Link href="/webtest" className={linkClass("/webtest")}>{t.webtest}</Link>
-              <Link href="/chat" className={linkClass("/chat")}>{t.chat}</Link>
-              <Link href="/tests" className={linkClass("/tests")}>{t.tests}</Link>
-              <Link href="/plan" className={linkClass("/plan")}>{t.plan}</Link>
+              <Link href="/" className={linkClass("/")}>
+                {t.home}
+              </Link>
+              <Link href="/schedule" className={linkClass("/schedule")}>
+                {t.schedule}
+              </Link>
+              <Link href="/personal" className={linkClass("/personal")}>
+                {t.personal}
+              </Link>
+              <Link href="/analytics" className={linkClass("/analytics")}>
+                {t.analytics}
+              </Link>
+              <Link href="/webtest" className={linkClass("/webtest")}>
+                {t.webtest}
+              </Link>
+              <Link href="/chat" className={linkClass("/chat")}>
+                {t.chat}
+              </Link>
+              <Link href="/tests" className={linkClass("/tests")}>
+                {t.tests}
+              </Link>
+              <Link href="/plan" className={linkClass("/plan")}>
+                {t.plan}
+              </Link>
             </>
           ) : (
             <>
-              {Array(8).fill(0).map((_, i) => (
-                <Skeleton key={i} width="w-3/4" height="h-5" className="my-1" />
-              ))}
+              {Array(8)
+                .fill(0)
+                .map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    width="w-3/4"
+                    height="h-5"
+                    className="my-1"
+                  />
+                ))}
             </>
           )}
         </nav>
@@ -104,7 +129,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         <div className="relative p-4 sm:p-6 mt-auto">
           <div
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100"
+            className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             {isLoaded ? (
               <img
@@ -117,7 +142,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             <div className="sm:block">
               {isLoaded ? (
                 <>
-                  <p className="text-sm font-medium">{userName.split(" ")[0]}</p>
+                  <p className="text-sm font-medium">
+                    {userName.split(" ")[0]}
+                  </p>
                   <p className="text-xs text-gray-500">{t.student}</p>
                 </>
               ) : (
@@ -130,15 +157,15 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           </div>
 
           {profileOpen && (
-            <div className="absolute bottom-14 left-0 w-full bg-white shadow rounded-lg p-2 sm:p-3 z-50">
+            <div className="absolute bottom-14 left-0 w-full bg-white dark:bg-gray-700 shadow rounded-lg p-2 sm:p-3 z-50">
               <button
-                className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-sm sm:text-base"
+                className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-sm sm:text-base"
                 onClick={() => setSettingsOpen(true)}
               >
                 <Settings size={16} /> {t.settings}
               </button>
 
-              <button className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full text-sm sm:text-base">
+              <button className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-sm sm:text-base">
                 <LogOut size={16} /> {t.logout}
               </button>
             </div>
@@ -149,35 +176,65 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       {/* Fullscreen Settings Modal */}
       {settingsOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[8px] bg-opacity-60"
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[8px] bg-black/30"
           onClick={() => setSettingsOpen(false)}
         >
           <div
-            className="bg-white rounded-lg w-11/12 max-w-md p-6 relative"
+            className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg w-11/12 max-w-md p-6 relative transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute top-3 right-3 p-1 rounded-md hover:bg-gray-100"
+              className="absolute top-3 right-3 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={() => setSettingsOpen(false)}
             >
-              <X size={20} />
+              ✕
             </button>
 
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Settings size={20} /> {t.settings}
-            </h2>
+            <h2 className="text-lg font-semibold mb-4">{t.settings}</h2>
 
-            <div className="flex flex-col gap-4">
-              <label className="text-sm font-medium">{t.selectLanguage}:</label>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as "en" | "ru" | "kg")}
-                className="w-full border rounded-md p-2"
-              >
-                <option value="en">English</option>
-                <option value="ru">Русский</option>
-                <option value="kg">Кыргызча</option>
-              </select>
+            <div className="flex flex-col gap-6">
+              {/* LANGUAGE */}
+              <div>
+                <label className="text-sm font-medium">
+                  {t.selectLanguage}:
+                </label>
+                <select
+                  value={language}
+                  onChange={(e) =>
+                    setLanguage(e.target.value as "en" | "ru" | "kg")
+                  }
+                  className="w-full border dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md p-2 mt-2"
+                >
+                  <option value="en">English</option>
+                  <option value="ru">Русский</option>
+                  <option value="kg">Кыргызча</option>
+                </select>
+              </div>
+
+              {/* THEME */}
+              <div>
+                <label className="text-sm font-medium">Theme:</label>
+
+                <div className="flex gap-6 mt-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={theme === "light"}
+                      onChange={() => setTheme("light")}
+                    />
+                    Light
+                  </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      checked={theme === "dark"}
+                      onChange={() => setTheme("dark")}
+                    />
+                    Dark
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { UserProvider } from "@/context/UserContext";
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 import Providers from "@/components/Providers";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 export const metadata: Metadata = {
   title: "MurasAI LMS",
@@ -16,18 +17,26 @@ export const metadata: Metadata = {
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html>
-      <body className={`${inter.className} bg-gray-100`}>
-        <LanguageProvider>
-          <UserProvider>
-            <ClientLayoutWrapper>
-              {children}
-              <Providers />
-            </ClientLayoutWrapper>
-          </UserProvider>
-        </LanguageProvider>
+    <html lang="en">
+      <body
+        className={`${inter.className} bg-gray-100 dark:bg-gray-900 transition-colors duration-300`}
+      >
+        <ThemeProvider>
+          <LanguageProvider>
+            <UserProvider>
+              <ClientLayoutWrapper>
+                {children}
+                <Providers />
+              </ClientLayoutWrapper>
+            </UserProvider>
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

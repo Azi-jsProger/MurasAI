@@ -48,9 +48,9 @@ export default function StudyPlan() {
                 )}
               </div>
 
-              <div className="bg-white p-6 rounded-2xl shadow-md flex-1">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md flex-1">
                 <h3 className="font-semibold">{item.day}</h3>
-                <p className="text-gray-600 mt-2">{item.task}</p>
+                <p className="text-gray-600 mt-2 dark:text-gray-400">{item.task}</p>
               </div>
             </div>
           ))}

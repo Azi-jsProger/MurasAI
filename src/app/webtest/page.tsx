@@ -46,12 +46,12 @@ export default function WebTest() {
             : tests.map((test, i) => (
                 <div
                   key={i}
-                  className="bg-white p-4 sm:p-6 rounded-xl shadow hover:-translate-y-1 transition-all"
+                  className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl shadow hover:-translate-y-1 transition-all"
                 >
                   <h2 className="font-semibold mb-2 text-lg sm:text-xl">
                     {t.webtesting[test.title as keyof typeof t.webtesting] || test.title}
                   </h2>
-                  <p className="text-gray-500 mb-2 text-sm sm:text-base">
+                  <p className="text-gray-500 dark:text-gray-400 mb-2 text-sm sm:text-base">
                     {t.difficulty}: {t.difficulties[test.difficulty as keyof typeof t.difficulties]}
                   </p>
 

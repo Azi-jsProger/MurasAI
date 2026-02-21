@@ -5,7 +5,6 @@ import { UserContext } from "@/context/UserContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
-
 export default function Personal() {
   const { userName, avatarBg } = useContext(UserContext);
   const { language, isLoaded } = useLanguage();
@@ -21,7 +20,7 @@ export default function Personal() {
       )}
 
       {/* Профиль */}
-      <div className="bg-white p-4 sm:p-8 rounded-2xl shadow-md flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+      <div className="bg-white dark:bg-gray-800 p-4 sm:p-8 rounded-2xl shadow-md flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
         {isLoaded ? (
           <img
             src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=${avatarBg}&color=fff`}
@@ -39,7 +38,7 @@ export default function Personal() {
                 {t.studentRole}
               </p>
 
-              <div className="mt-2 sm:mt-4 bg-indigo-100 text-indigo-700 px-3 py-1 sm:px-4 sm:py-2 rounded-full inline-block text-xs sm:text-sm font-medium">
+              <div className="mt-2 sm:mt-4 bg-indigo-100 dark:bg-gray-700 text-indigo-700 dark:text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full inline-block text-xs sm:text-sm font-medium">
                 {t.aiLevel}: {t.advanced}
               </div>
             </>
@@ -57,20 +56,47 @@ export default function Personal() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
         {isLoaded ? (
           <>
-            <StatCard title={t.testsCompleted} value="24" color="from-indigo-500 to-purple-600" />
-            <StatCard title={t.avgScore} value="82%" color="from-emerald-500 to-teal-600" />
-            <StatCard title={t.learningHours} value={t.hour} color="from-orange-500 to-pink-500" />
-            <StatCard title={t.aiRating} value="A+" color="from-blue-500 to-cyan-500" />
+            <StatCard
+              title={t.testsCompleted}
+              value="24"
+              color="from-indigo-500 to-purple-600"
+            />
+            <StatCard
+              title={t.avgScore}
+              value="82%"
+              color="from-emerald-500 to-teal-600"
+            />
+            <StatCard
+              title={t.learningHours}
+              value={t.hour}
+              color="from-orange-500 to-pink-500"
+            />
+            <StatCard
+              title={t.aiRating}
+              value="A+"
+              color="from-blue-500 to-cyan-500"
+            />
           </>
         ) : (
-          Array(4).fill(0).map((_, i) => <Skeleton key={i} width="w-full" height="h-20" className="rounded-2xl" />)
+          Array(4)
+            .fill(0)
+            .map((_, i) => (
+              <Skeleton
+                key={i}
+                width="w-full"
+                height="h-20"
+                className="rounded-2xl"
+              />
+            ))
         )}
       </div>
 
       {/* AI анализ */}
       {isLoaded ? (
         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 sm:p-8 rounded-2xl shadow-lg">
-          <h3 className="font-semibold mb-1 sm:mb-2 text-base sm:text-lg">🧠 {t.aiAnalysis}</h3>
+          <h3 className="font-semibold mb-1 sm:mb-2 text-base sm:text-lg">
+            🧠 {t.aiAnalysis}
+          </h3>
           <p className="opacity-90 text-xs sm:text-sm">{t.aiAnalysisText}</p>
         </div>
       ) : (
@@ -82,7 +108,9 @@ export default function Personal() {
 
 function StatCard({ title, value, color }: any) {
   return (
-    <div className={`bg-gradient-to-r ${color} text-white p-4 sm:p-6 rounded-2xl shadow-lg`}>
+    <div
+      className={`bg-gradient-to-r ${color} text-white p-4 sm:p-6 rounded-2xl shadow-lg`}
+    >
       <p className="text-xs sm:text-sm opacity-80">{title}</p>
       <p className="text-xl sm:text-2xl font-semibold">{value}</p>
     </div>

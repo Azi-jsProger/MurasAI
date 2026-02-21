@@ -37,10 +37,10 @@ export default function Tests() {
         toastStyle={{ backgroundColor: "#6366F1" }}
       />
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 mt-10 sm:mt-0">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t.testGenerators}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold ">{t.testGenerators}</h1>
 
-        <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-md">
-          <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
+        <div className="bg-white dark:bg-gray-800  p-6 sm:p-8 rounded-2xl shadow-md">
+          <p className="text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
             {t.testGeneratorDescription}
           </p>
           <button
@@ -69,10 +69,10 @@ export default function Tests() {
 
 function TestCard({ title, score }: any) {
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-md hover:shadow-xl transition">
+    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md hover:shadow-xl transition">
       <FileText className="text-indigo-500 mb-3 sm:mb-4 w-6 h-6 sm:w-8 sm:h-8" />
       <h3 className="font-semibold text-base sm:text-lg">{title}</h3>
-      <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base">
+      <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base dark:text-gray-400">
         {score}
       </p>
     </div>
