@@ -1,7 +1,13 @@
 "use client";
-import { createContext, useState, useContext, ReactNode, useEffect } from "react";
 
-type Language = "en" | "ru" | "kg";
+import {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
+import type { Language } from "@/locales";
 
 interface LanguageContextProps {
   language: Language;
@@ -9,13 +15,15 @@ interface LanguageContextProps {
   isLoaded: boolean;
 }
 
-const LanguageContext = createContext<LanguageContextProps>({
-  language: "ru",
-  setLanguage: () => {},
-  isLoaded: false,
-});
+const LanguageContext = createContext<LanguageContextProps | undefined>(
+  undefined
+);
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+export const LanguageProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [language, setLanguageState] = useState<Language>("ru");
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -29,11 +37,13 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedLang = localStorage.getItem("language") as Language | null;
+
       if (savedLang && ["en", "ru", "kg"].includes(savedLang)) {
         setLanguageState(savedLang);
       }
+
+      setIsLoaded(true);
     }
-    setIsLoaded(true);
   }, []);
 
   return (
@@ -43,4 +53,10 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useLanguage = () => useContext(LanguageContext);
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error("useLanguage must be used inside LanguageProvider");
+  }
+  return context;
+};

@@ -8,7 +8,9 @@ import Skeleton from "@/components/Skeleton";
 
 export default function Schedule() {
   const { language, isLoaded } = useLanguage();
-  const t = translations[language] as Record<string, string>;
+
+  // ✅ БЕЗ as Record<string,string>
+  const t = translations[language];
 
   const schedule = [
     {
@@ -88,12 +90,7 @@ export default function Schedule() {
     "computer science": "from-blue-400 to-blue-600",
   };
 
-  const [tooltip, setTooltip] = useState<{
-    visible: boolean;
-    text: string;
-    x: number;
-    y: number;
-  }>({
+  const [tooltip, setTooltip] = useState({
     visible: false,
     text: "",
     x: 0,
@@ -101,7 +98,7 @@ export default function Schedule() {
   });
 
   function handleMouseEnter(
-    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    event: React.MouseEvent<HTMLLIElement>,
     time: string
   ) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -118,12 +115,11 @@ export default function Schedule() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 mt-10 sm:mt-0 relative">
-      {/* Заголовок */}
+    <div className="p-4 space-y-6 mt-10 relative">
       <div className="flex items-center gap-3">
         <Calendar size={28} className="text-indigo-500" />
         {isLoaded ? (
-          <h1 className="text-2xl sm:text-3xl font-bold text-indigo-700">
+          <h1 className="text-2xl font-bold text-indigo-700">
             {t.schedule}
           </h1>
         ) : (
@@ -131,35 +127,35 @@ export default function Schedule() {
         )}
       </div>
 
-      {/* Сетка расписания */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         {isLoaded
           ? schedule.map((day, i) => (
               <div
                 key={i}
-                className="bg-gradient-to-br from-indigo-50 via-indigo-100 to-indigo-200 p-4 sm:p-6 rounded-2xl shadow-md hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 border-l-4 border-indigo-500 relative z-10"
+                className="bg-indigo-100 p-4 rounded-2xl shadow-md"
               >
-                <h2 className="font-semibold mb-4 text-lg sm:text-xl flex items-center gap-2 text-indigo-700">
+                <h2 className="font-semibold mb-4 text-lg flex items-center gap-2">
                   <Calendar size={18} /> {dayMap[day.day]}
                 </h2>
 
-                <ul className="space-y-3 relative">
+                <ul className="space-y-3">
                   {day.lessons.map((lesson, j) => {
                     const lessonKey = lesson.name.toLowerCase();
                     const color =
-                      lessonColors[lessonKey] || "from-gray-400 to-gray-600";
+                      lessonColors[lessonKey] ||
+                      "from-gray-400 to-gray-600";
 
                     return (
                       <li
                         key={j}
-                        className={`w-[50vw]  sm:w-[11vw] flex items-center gap-2 text-white bg-gradient-to-r ${color} px-4 py-2 rounded-full text-sm sm:text-base shadow-sm cursor-default`}
-                        onMouseEnter={(e) => handleMouseEnter(e, lesson.time)}
+                        className={`flex items-center gap-2 text-white bg-gradient-to-r ${color} px-4 py-2 rounded-full text-sm`}
+                        onMouseEnter={(e) =>
+                          handleMouseEnter(e, lesson.time)
+                        }
                         onMouseLeave={handleMouseLeave}
                       >
                         <BookOpen size={16} />
-                        <span className="truncate">
-                          {lessonMap[lessonKey] || lesson.name}
-                        </span>
+                        {lessonMap[lessonKey] || lesson.name}
                       </li>
                     );
                   })}
@@ -172,19 +168,17 @@ export default function Schedule() {
                 <div
                   key={i}
                   className="bg-gray-200 rounded-2xl p-4 animate-pulse h-48"
-                ></div>
+                />
               ))}
       </div>
 
-      {/* Глобальный tooltip */}
       {tooltip.visible && (
         <div
-          className="fixed z-[9999] bg-gray-800 text-white text-xs rounded-md px-3 py-1 shadow-lg pointer-events-none select-none"
+          className="fixed z-50 bg-gray-800 text-white text-xs rounded-md px-3 py-1 shadow-lg"
           style={{
             top: tooltip.y,
             left: tooltip.x,
             transform: "translateY(-50%)",
-            whiteSpace: "nowrap",
           }}
         >
           {tooltip.text}

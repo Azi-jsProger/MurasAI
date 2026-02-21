@@ -327,4 +327,14 @@ export const translations = {
     day5: "5-Күн",
     task5: "Кайталоо жана AI сунуштары",
   },
-};
+}; 
+
+/**
+ * Язык автоматически = "en" | "ru" | "kg"
+ */
+export type Language = keyof typeof translations;
+
+/**
+ * Тип одного словаря
+ */
+export type Translation = typeof translations[Language];
