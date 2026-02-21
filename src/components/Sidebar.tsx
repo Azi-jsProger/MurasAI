@@ -36,6 +36,23 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white",
     );
 
+    const postLogout = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        window.location.href = "/login";
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       {/* Overlay для мобилок */}
@@ -165,7 +182,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                 <Settings size={16} /> {t.settings}
               </button>
 
-              <button className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-sm sm:text-base">
+              <button className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-sm sm:text-base"
+                onClick={postLogout}
+              >
                 <LogOut size={16} /> {t.logout}
               </button>
             </div>

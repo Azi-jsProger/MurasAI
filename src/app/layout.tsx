@@ -1,12 +1,10 @@
+// app/layout.tsx
 import "./globals.css";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { UserProvider } from "@/context/UserContext";
-import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
-import Providers from "@/components/Providers";
-import { LanguageProvider } from "@/context/LanguageContext";
-import { ThemeProvider } from "@/context/ThemeContext";
+import ClientProviders from "@/components/ClientProviders";
+import { Metadata } from "next";
 
+const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "MurasAI LMS",
   description: "Platform AI",
@@ -15,28 +13,12 @@ export const metadata: Metadata = {
   },
 };
 
-const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.className} bg-gray-100 dark:bg-gray-900 transition-colors duration-300`}
-      >
-        <ThemeProvider>
-          <LanguageProvider>
-            <UserProvider>
-              <ClientLayoutWrapper>
-                {children}
-                <Providers />
-              </ClientLayoutWrapper>
-            </UserProvider>
-          </LanguageProvider>
-        </ThemeProvider>
+    <html lang="ru">
+      <body className={`${inter.className} bg-gray-100 dark:bg-gray-900 transition-colors duration-300`}>
+        {children}
       </body>
     </html>
   );
