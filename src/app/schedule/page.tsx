@@ -130,9 +130,9 @@ export default function Schedule() {
           ? schedule.map((day, i) => (
               <div
                 key={i}
-                className="bg-gradient-to-tr from-white-500 to-white-400 dark:from-indigo-500 dark:to-purple-500 p-5 rounded-3xl shadow-lg hover:scale-105 transform transition-all duration-300"
+                className="bg-gradient-to-tr from-white-500 to-white-400 dark:bg-gray-800 p-5 rounded-3xl shadow-lg hover:scale-105 transform transition-all duration-300"
               >
-                <h2 className="font-semibold mb-5 text-lg flex items-center gap-2 text-black">
+                <h2 className="font-semibold mb-5 text-lg flex items-center gap-2 text-black dark:text-white">
                   <Calendar size={18} /> {dayMap[day.day]}
                 </h2>
 
