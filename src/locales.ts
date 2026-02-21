@@ -107,6 +107,9 @@ export const translations = {
     task4: "Practice tests",
     day5: "Day 5",
     task5: "Revision & AI recommendations",
+    theme: "Theme",
+    dark: "Dark",
+    light: "Light",
   },
   ru: {
     home: "Главная",
@@ -217,6 +220,9 @@ export const translations = {
     task4: "Практика тестов",
     day5: "5 День",
     task5: "Повторение и AI рекомендации",
+    theme: "Тема",
+    dark: "Тёмная",
+    light: "Светлая",
   },
   kg: {
     home: "Башкы бет",
@@ -326,8 +332,11 @@ export const translations = {
     task4: "Тесттерди практика кылуу",
     day5: "5-Күн",
     task5: "Кайталоо жана AI сунуштары",
+    theme: "Түс темасы",
+    dark:"Караңгы",
+    light:"Жарык",
   },
-}; 
+};
 
 /**
  * Язык автоматически = "en" | "ru" | "kg"
@@ -337,4 +346,4 @@ export type Language = keyof typeof translations;
 /**
  * Тип одного словаря
  */
-export type Translation = typeof translations[Language];
+export type Translation = (typeof translations)[Language];

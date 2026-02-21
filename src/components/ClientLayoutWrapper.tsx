@@ -17,7 +17,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
         {/* Бургер-меню на мобилке — показываем только если Sidebar закрыт */}
         {!sidebarOpen && (
           <button
-            className="sm:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-md"
+            className="sm:hidden fixed top-4 left-4 z-50 p-2 bg-white dark:bg-gray-800 rounded-md shadow-md"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu size={24} />

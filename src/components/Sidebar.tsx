@@ -41,7 +41,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
       {/* Overlay для мобилок */}
       <div
         className={cn(
-          "fixed inset-0 bg-black bg-opacity-30 transition-opacity sm:hidden z-40",
+          "fixed inset-0 bg-red-700 bg-opacity-30 transition-opacity sm:hidden z-40",
           open ? "opacity-100 visible" : "opacity-0 invisible",
         )}
         onClick={() => setOpen(false)}
@@ -73,7 +73,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           )}
 
           <button
-            className="sm:hidden p-1 rounded-md hover:bg-gray-100"
+            className="sm:hidden p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
             onClick={() => setOpen(false)}
           >
             <X size={20} />
@@ -213,7 +213,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
               {/* THEME */}
               <div>
-                <label className="text-sm font-medium">Theme:</label>
+                <label className="text-sm font-medium">{t.theme}:</label>
 
                 <div className="flex gap-6 mt-3">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -222,7 +222,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       checked={theme === "light"}
                       onChange={() => setTheme("light")}
                     />
-                    Light
+                    {t.light}
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -231,7 +231,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       checked={theme === "dark"}
                       onChange={() => setTheme("dark")}
                     />
-                    Dark
+                    {t.dark}
                   </label>
                 </div>
               </div>
