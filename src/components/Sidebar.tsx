@@ -36,7 +36,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
         : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white",
     );
 
-    const postLogout = async () => {
+  const postLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/auth/logout", {
         method: "POST",
@@ -113,14 +113,14 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
               <Link href="/analytics" className={linkClass("/analytics")}>
                 {t.analytics}
               </Link>
+              <Link href="/tests" className={linkClass("/tests")}>
+                {t.tests}
+              </Link>
               <Link href="/webtest" className={linkClass("/webtest")}>
                 {t.webtest}
               </Link>
               <Link href="/chat" className={linkClass("/chat")}>
                 {t.chat}
-              </Link>
-              <Link href="/tests" className={linkClass("/tests")}>
-                {t.tests}
               </Link>
               <Link href="/plan" className={linkClass("/plan")}>
                 {t.plan}
@@ -182,7 +182,8 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                 <Settings size={16} /> {t.settings}
               </button>
 
-              <button className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-sm sm:text-base"
+              <button
+                className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-sm sm:text-base"
                 onClick={postLogout}
               >
                 <LogOut size={16} /> {t.logout}

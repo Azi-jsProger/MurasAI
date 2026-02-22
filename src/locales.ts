@@ -278,8 +278,8 @@ export const translations = {
     aiAnalytics: "AI Окуу аналитикасы",
     progressWeeks: "Апта боюнча прогресс",
     week: "Апта",
-    subjectScores: "Предметтер боюнча упайлар",
-    skillsRadar: "AI көндүмдөрүн баалоо",
+    subjectScores: "Сабактар боюнча упайлар",
+    skillsRadar: "AI жөндөмдөрүн баалоо",
     subjects: {
       Math: "Математика",
       Physics: "Физика",
