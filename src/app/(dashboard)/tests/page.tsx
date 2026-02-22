@@ -12,21 +12,46 @@ export default function Tests() {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
 
+  const [generateOpen, setGenerateOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const tests = [
-    { title: "Algebra", score: "85%" },
-    { title: "Physics", score: "78%" },
-    { title: "Biology", score: "91%" },
-  ];
+  const [tests, setTests] = useState([]);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  const showToast = () => {
-    toast.success(t.inDevelopments);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) setFile(e.target.files[0]);
+  };
+
+  const handleGenerate = async () => {
+    if (!file) {
+      toast.error("Выберите файл!");
+      return;
+    }
+
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/generate-tests", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      setTests(data.tests || []);
+      setGenerateOpen(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Ошибка при генерации тестов.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -37,15 +62,15 @@ export default function Tests() {
         toastStyle={{ backgroundColor: "#6366F1" }}
       />
       <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 mt-10 sm:mt-0">
-        <h1 className="text-2xl sm:text-3xl font-bold ">{t.testGenerators}</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">{t.testGenerators}</h1>
 
-        <div className="bg-white dark:bg-gray-800  p-6 sm:p-8 rounded-2xl shadow-md">
+        <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-md">
           <p className="text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
             {t.testGeneratorDescription}
           </p>
           <button
             className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg hover:scale-105 transition"
-            onClick={showToast}
+            onClick={() => setGenerateOpen(true)}
           >
             {t.createTest}
           </button>
@@ -59,10 +84,32 @@ export default function Tests() {
           {!loading &&
             isLoaded &&
             tests.map((test, i) => (
-              <TestCard key={i} title={t.testss[test.title as keyof typeof t.testss]} score={test.score} />
+              <TestCard key={i} title={test.title} score={test.score} />
             ))}
         </div>
       </div>
+
+      {generateOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[5px]"
+          onClick={() => setGenerateOpen(false)}
+        >
+          <div
+            className="bg-white rounded-[30px] w-[60vw] h-[60vh] flex flex-col justify-center align-center p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-semibold mb-4">Загрузите файл с тестами</h2>
+            <input type="file" onChange={handleFileChange} className="mb-4" />
+            <button
+              className="bg-indigo-600 text-white px-4 py-2 rounded-xl"
+              onClick={handleGenerate}
+              disabled={uploading}
+            >
+              {uploading ? "Генерация..." : "Создать тесты"}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
