@@ -73,7 +73,7 @@ export default function ChatFullScreen() {
         <div ref={chatEndRef} />
       </div>
 
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 p-3 sm:p-4">
+      <div className="sticky bottom-0 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-700 p-3 sm:p-4">
         <div className="flex gap-2 sm:gap-3">
           <input
             type="text"
@@ -81,7 +81,7 @@ export default function ChatFullScreen() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Введите сообщение..."
-            className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white dark:focus:border-gray-700"
           />
           <button
             onClick={handleSend}
