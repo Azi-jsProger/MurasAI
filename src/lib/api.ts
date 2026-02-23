@@ -1,4 +1,8 @@
-export async function sendChat(message) {
+type ChatResponse = {
+  reply: string;
+};
+
+export async function sendChat(message: string): Promise<ChatResponse | null> {
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -7,6 +11,11 @@ export async function sendChat(message) {
         messages: [{ role: "user", content: message }],
       }),
     });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch");
+    }
+
     return await res.json();
   } catch (err) {
     console.error(err);
