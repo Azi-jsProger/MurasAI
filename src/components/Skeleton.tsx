@@ -1,11 +1,10 @@
-// components/Skeleton.tsx
 "use client";
 
 interface SkeletonProps {
-  width?: string;    // tailwind width, например "w-24"
-  height?: string;   // tailwind height, например "h-6"
-  className?: string; // дополнительные классы
-  circle?: boolean;  // для аватара/круглых элементов
+  width?: string;
+  height?: string;
+  className?: string;
+  circle?: boolean;
 }
 
 export default function Skeleton({
@@ -16,9 +15,11 @@ export default function Skeleton({
 }: SkeletonProps) {
   return (
     <div
-      className={`bg-gray-300 animate-pulse ${width} ${height} ${
+      className={`relative overflow-hidden bg-gray-300 ${
         circle ? "rounded-full" : "rounded"
-      } ${className}`}
-    ></div>
+      } ${width} ${height} ${className}`}
+    >
+      <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+    </div>
   );
 }
