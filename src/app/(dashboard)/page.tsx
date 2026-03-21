@@ -10,7 +10,8 @@ import Link from "next/link";
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
-import { TypeAnimation } from "react-type-animation";
+import AnimatedText from "@/components/AnimatedText";
+import FadeText from "@/components/FadeText";
 
 export default function Dashboard() {
   const { language, isLoaded } = useLanguage();
@@ -43,22 +44,12 @@ export default function Dashboard() {
       <div>
         {isLoaded ? (
           <>
-            <TypeAnimation
-              sequence={["", 400, t.welcome + " 🚀"]}
-              speed={50}
-              cursor={true}
-              repeat={0}
+            <AnimatedText
+              text={t.welcome + " 🚀"}
               className="text-2xl sm:text-3xl font-bold"
             />
 
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 }}
-              className="text-gray-500 mt-2 text-sm sm:text-base"
-            >
-              {t.helperText}
-            </motion.p>
+          <FadeText text={t.helperText} />
           </>
         ) : (
           <>
@@ -76,25 +67,25 @@ export default function Dashboard() {
               title={t.avgScore}
               value={<AnimatedNumber end={82} suffix="%" />}
               color="from-indigo-500 to-purple-600"
-              delay={0}
+              delay={0.1}
             />
             <StatCard
               title={t.aiRating}
               value={t.advanced}
               color="from-emerald-500 to-teal-600"
-              delay={0.15}
+              delay={0.12}
             />
             <StatCard
               title={t.testsCompleted}
               value={<AnimatedNumber end={24} />}
               color="from-orange-500 to-pink-500"
-              delay={0.3}
+              delay={0.121}
             />
             <StatCard
               title={t.learningHours}
               value={<AnimatedNumber end={12} suffix={` ${t.hour}`} />}
               color="from-blue-500 to-cyan-500"
-              delay={0.45}
+              delay={0.1221}
             />
           </>
         ) : (
@@ -206,7 +197,7 @@ function StatCard({ title, value, color, delay = 0 }: any) {
         scale: 1,
         filter: "blur(0px)",
       }}
-      transition={{ duration: 0.6, delay }}
+      transition={{ duration: 0.125, delay }}
       whileHover={{
         scale: 1.05,
         y: -3,
@@ -226,15 +217,13 @@ function ModuleCard({ icon: Icon, color, title, description }: any) {
       whileHover={{ scale: 1.03, y: -4 }}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.125 }}
       className="bg-white h-[25vh] sm:h-[30vh] dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-xl cursor-pointer group"
     >
       <Icon
         className={`w-8 h-8 sm:w-10 sm:h-10 ${color} mb-3 sm:mb-4 group-hover:scale-110 transition`}
       />
-      <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">
-        {title}
-      </h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">{title}</h3>
       <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">
         {description}
       </p>
