@@ -8,6 +8,8 @@ This project was built as a hackathon MVP inspired by AVN LMS, enhanced with art
 
 ## 🧠 Features
 
+#2962FF
+
 ### 🤖 AI Study Assistant
 - Chat-based AI tutor
 - Explains topics clearly
