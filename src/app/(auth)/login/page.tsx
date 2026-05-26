@@ -2,77 +2,78 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { GraduationCap } from "lucide-react";
+import { login } from "@/lib/api";
+import { InputField, PrimaryButton, pageCardClass } from "@/components/ui/page-shell";
+import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: any) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    const res = await fetch("http://localhost:8080/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ email, password }),
-    });
+    const { ok, message } = await login(email, password);
 
-    const text = await res.text();
-
-    if (text === "Login success") {
+    if (ok) {
       router.push("/");
     } else {
-      setError(text);
+      setError(message);
     }
+    setLoading(false);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
-      <div className="bg-white p-12 rounded-xl shadow-xl w-[400px] border border-gray-200">
-        <h1 className="text-3xl font-semibold mb-8 text-center text-gray-800">
-          Вход в MurasAI
-        </h1>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 dark:bg-slate-950">
+      <div className={cn(pageCardClass, "w-full max-w-md p-8 sm:p-10")}>
+        <div className="mb-8 flex flex-col items-center text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600/20 text-indigo-500 ring-1 ring-indigo-500/30">
+            <GraduationCap className="h-7 w-7" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            MurasAI LMS
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
+            Вход в аккаунт
+          </p>
+        </div>
 
-        <form onSubmit={handleLogin} className="flex flex-col gap-5">
-          <input
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+          <InputField
             type="email"
             placeholder="Email"
-            className="border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-black"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
-
-          <input
+          <InputField
             type="password"
             placeholder="Пароль"
-            className="border border-gray-300 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-black"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
 
           {error && (
-            <p className="text-red-600 text-sm text-center">{error}</p>
+            <p className="rounded-lg bg-red-500/10 px-3 py-2 text-center text-sm text-red-600 dark:text-red-400">
+              {error}
+            </p>
           )}
 
-          <button
+          <PrimaryButton
             type="submit"
-            className="bg-indigo-600 text-white py-3 rounded-md font-medium hover:bg-indigo-700 transition"
+            disabled={loading}
+            className="w-full py-3"
           >
-            Войти
-          </button>
+            {loading ? "..." : "Войти"}
+          </PrimaryButton>
         </form>
-
-        <p className="mt-6 text-center text-gray-500 text-sm">
-          Забыли аккаунта?{" "}
-          <a href="/register" className="text-indigo-600 hover:underline">
-            Восстановить
-          </a>
-        </p>
       </div>
     </div>
   );

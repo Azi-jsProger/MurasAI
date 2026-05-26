@@ -1,3 +1,6 @@
+const SYSTEM_PROMPT =
+  "Ты — MurasAI, умный репетитор LMS. Помогаешь студентам готовиться к экзаменам: объясняешь темы просто, даёшь примеры и короткие планы занятий. Отвечай на языке пользователя.";
+
 export async function POST(req) {
   try {
     const { messages } = await req.json();
@@ -12,18 +15,17 @@ export async function POST(req) {
         },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
-          messages,
+          messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+          temperature: 0.7,
+          max_tokens: 1024,
         }),
-      }
+      },
     );
 
     if (!res.ok) {
       const errorText = await res.text();
       console.error("Groq API error:", errorText);
-      return new Response(
-        JSON.stringify({ error: "Ошибка API модели" }),
-        { status: 500 }
-      );
+      return Response.json({ error: "Ошибка API модели" }, { status: 500 });
     }
 
     const data = await res.json();
@@ -31,12 +33,9 @@ export async function POST(req) {
       data?.choices?.[0]?.message?.content ||
       "Извини, я не смог ответить.";
 
-    return new Response(JSON.stringify({ reply }), { status: 200 });
+    return Response.json({ reply });
   } catch (err) {
     console.error("Chat route error:", err);
-    return new Response(
-      JSON.stringify({ error: "Ошибка сервера" }),
-      { status: 500 }
-    );
+    return Response.json({ error: "Ошибка сервера" }, { status: 500 });
   }
 }

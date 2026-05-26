@@ -13,6 +13,8 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
+import { pageCardClass } from "@/components/ui/page-shell";
+import { cn } from "@/lib/utils";
 
 export default function ProgressChart() {
   const { language, isLoaded } = useLanguage();
@@ -37,8 +39,8 @@ export default function ProgressChart() {
     return <Skeleton width="w-full" height="h-64" className="rounded-2xl" />;
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md">
-      <h2 className="text-base sm:text-lg font-semibold mb-4">
+    <div className={cn(pageCardClass)}>
+      <h2 className="mb-4 text-base font-semibold text-gray-900 dark:text-white sm:text-lg">
         {t.progressWeeks}
       </h2>
       <div className="h-[220px] sm:h-[300px]">

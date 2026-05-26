@@ -135,3 +135,34 @@
     @apply bg-background text-foreground;
     }
 }
+
+/* globals.css */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* Для горизонтального скролла */
+}
+
+::-webkit-scrollbar-track {
+  /* Используем переменную мутед или бэкграунд */
+  background: var(--muted); 
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  /* Используем переменную бордера или основной текст с прозрачностью */
+  background: var(--border);
+  border-radius: 5px;
+  border: 2px solid var(--muted); /* Создает эффект отступа от краев */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  /* При наведении делаем чуть ярче */
+  background: var(--foreground);
+}
+
+/* Для Firefox (используем стандартные свойства) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--muted);
+}

@@ -4,11 +4,13 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { useEffect, useState } from "react";
+import { BookOpen, CheckCircle2 } from "lucide-react";
+import { PageCard, PageHeader, PageShell } from "@/components/ui/page-shell";
+import { cn } from "@/lib/utils";
 
 export default function StudyPlan() {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
-
   const [loading, setLoading] = useState(true);
 
   const plan = [
@@ -20,19 +22,27 @@ export default function StudyPlan() {
   ];
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
+    const timer = setTimeout(() => setLoading(false), 400);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="p-8 space-y-8">
-      <h1 className="text-3xl font-bold">{t.studyPlanTitle}</h1>
+    <PageShell>
+      {isLoaded ? (
+        <PageHeader
+          icon={BookOpen}
+          title={t.studyPlanTitle}
+          subtitle={t.studyPlannerDesc}
+        />
+      ) : (
+        <Skeleton width="w-56" height="h-10" />
+      )}
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {(loading || !isLoaded) &&
           Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-start gap-6">
-              <Skeleton width="w-6" height="h-6" className="rounded-full" />
+            <div key={i} className="flex gap-4">
+              <Skeleton width="w-8" height="h-8" circle />
               <Skeleton width="w-full" height="h-20" className="rounded-2xl" />
             </div>
           ))}
@@ -40,21 +50,36 @@ export default function StudyPlan() {
         {!loading &&
           isLoaded &&
           plan.map((item, i) => (
-            <div key={i} className="flex items-start gap-6">
+            <div key={i} className="flex gap-4">
               <div className="flex flex-col items-center">
-                <div className="w-6 h-6 rounded-full bg-indigo-500"></div>
+                <div
+                  className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600/20 text-indigo-500 ring-1 ring-indigo-500/40",
+                    i === 0 && "bg-indigo-600 text-white ring-0",
+                  )}
+                >
+                  {i < 2 ? (
+                    <CheckCircle2 className="h-4 w-4" />
+                  ) : (
+                    <span className="text-xs font-bold">{i + 1}</span>
+                  )}
+                </div>
                 {i !== plan.length - 1 && (
-                  <div className="w-1 h-16 bg-indigo-200"></div>
+                  <div className="my-1 w-px flex-1 bg-indigo-500/20" />
                 )}
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md flex-1">
-                <h3 className="font-semibold">{item.day}</h3>
-                <p className="text-gray-600 mt-2 dark:text-gray-400">{item.task}</p>
-              </div>
+              <PageCard className="flex-1">
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {item.day}
+                </h3>
+                <p className="mt-2 text-sm text-gray-600 dark:text-slate-400">
+                  {item.task}
+                </p>
+              </PageCard>
             </div>
           ))}
       </div>
-    </div>
+    </PageShell>
   );
 }

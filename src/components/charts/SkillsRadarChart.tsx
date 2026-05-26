@@ -12,6 +12,8 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
+import { pageCardClass } from "@/components/ui/page-shell";
+import { cn } from "@/lib/utils";
 
 const skillsData = [
   { skill: "Logic", value: 85 },
@@ -42,8 +44,8 @@ export default function SkillsRadarChart() {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md">
-      <h2 className="text-base sm:text-lg font-semibold mb-4">{t.skillsRadar}</h2>
+    <div className={cn(pageCardClass)}>
+      <h2 className="mb-4 text-base font-semibold text-gray-900 dark:text-white sm:text-lg">{t.skillsRadar}</h2>
       <div className="h-[260px] sm:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={translatedSkills} outerRadius={isMobile ? "54%" : "80%"}>

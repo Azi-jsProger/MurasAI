@@ -1,11 +1,18 @@
 "use client";
 
-import Providers from "@/components/Providers";
 import { toast } from "react-toastify";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { useState, useEffect } from "react";
+import { ClipboardList } from "lucide-react";
+import {
+  PageCard,
+  PageHeader,
+  PageShell,
+  PrimaryButton,
+} from "@/components/ui/page-shell";
+import { cn } from "@/lib/utils";
 
 export default function WebTest() {
   const { language, isLoaded } = useLanguage();
@@ -18,60 +25,68 @@ export default function WebTest() {
   ];
 
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // Симулируем небольшую задержку загрузки
-    const timer = setTimeout(() => setLoading(false), 500);
+    const timer = setTimeout(() => setLoading(false), 400);
     return () => clearTimeout(timer);
   }, []);
 
   const showToast = () => {
-    toast.success(t.inDevelopment);
+    toast.info(t.inDevelopment, {
+      theme: "colored",
+    });
   };
 
   return (
-    <>
-      <Providers
-        position="top-right"
-        autoClose={2500}
-        toastStyle={{ backgroundColor: "#6366F1" }}
-      />
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 mt-10 sm:mt-0">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t.testing}</h1>
+    <PageShell>
+      {isLoaded ? (
+        <PageHeader
+          icon={ClipboardList}
+          title={t.testing}
+          subtitle={t.helperText}
+        />
+      ) : (
+        <Skeleton width="w-48" height="h-10" />
+      )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {loading || !isLoaded
-            ? Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} width="w-full" height="h-48" className="rounded-xl" />
-              ))
-            : tests.map((test, i) => (
-                <div
-                  key={i}
-                  className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl shadow hover:-translate-y-1 transition-all"
-                >
-                  <h2 className="font-semibold mb-2 text-lg sm:text-xl">
-                    {t.webtesting[test.title as keyof typeof t.webtesting] || test.title}
-                  </h2>
-                  <p className="text-gray-500 dark:text-gray-400 mb-2 text-sm sm:text-base">
-                    {t.difficulty}: {t.difficulties[test.difficulty as keyof typeof t.difficulties]}
-                  </p>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-5">
+        {loading || !isLoaded
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} width="w-full" height="h-52" className="rounded-2xl" />
+            ))
+          : tests.map((test, i) => (
+              <PageCard key={i} className="flex flex-col">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {t.webtesting[test.title as keyof typeof t.webtesting] ||
+                    test.title}
+                </h2>
+                <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
+                  {t.difficulty}:{" "}
+                  {
+                    t.difficulties[
+                      test.difficulty as keyof typeof t.difficulties
+                    ]
+                  }
+                </p>
 
-                  <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full"
-                      style={{ width: `${test.progress}%` }}
-                    />
-                  </div>
-
-                  <button
-                    className="w-full bg-blue-500 text-white px-4 py-2 sm:px-5 sm:py-3 rounded mt-2 hover:bg-blue-600 transition"
-                    onClick={showToast}
-                  >
-                    {t.startTest}
-                  </button>
+                <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-slate-700">
+                  <div
+                    className={cn(
+                      "h-full rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 transition-all",
+                    )}
+                    style={{ width: `${test.progress}%` }}
+                  />
                 </div>
-              ))}
-        </div>
+                <p className="mt-1 text-right text-xs text-gray-400">
+                  {test.progress}%
+                </p>
+
+                <PrimaryButton className="mt-4 w-full" onClick={showToast}>
+                  {t.startTest}
+                </PrimaryButton>
+              </PageCard>
+            ))}
       </div>
-    </>
+    </PageShell>
   );
 }

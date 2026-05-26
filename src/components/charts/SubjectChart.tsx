@@ -14,6 +14,8 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
+import { pageCardClass } from "@/components/ui/page-shell";
+import { cn } from "@/lib/utils";
 
 const subjectData = [
   { subject: "Math", score: 85 },
@@ -45,8 +47,8 @@ export default function SubjectChart() {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md">
-      <h2 className="text-base sm:text-lg font-semibold mb-4">{t.subjectScores}</h2>
+    <div className={cn(pageCardClass)}>
+      <h2 className="mb-4 text-base font-semibold text-gray-900 dark:text-white sm:text-lg">{t.subjectScores}</h2>
       <div className="h-[240px] sm:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={translatedData} margin={{ top: 10, right: 20, left: 0, bottom: isMobile ? 40 : 5 }}>

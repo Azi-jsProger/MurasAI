@@ -1,167 +1,148 @@
 "use client";
-import { FileText } from "lucide-react";
+
+import { FileText, Plus } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { useState, useEffect } from "react";
+import {
+  InputField,
+  PageCard,
+  PageHeader,
+  PageShell,
+  PrimaryButton,
+  SecondaryButton,
+  SelectField,
+} from "@/components/ui/page-shell";
+
 export default function Tests() {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
   const [generateOpen, setGenerateOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const tests = [
     { title: "Algebra", score: "85%" },
     { title: "Physics", score: "78%" },
     { title: "Biology", score: "91%" },
   ];
+
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
+    const timer = setTimeout(() => setLoading(false), 400);
     return () => clearTimeout(timer);
   }, []);
 
-  const style = "bg-black"
   return (
     <>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 mt-10 sm:mt-0">
-        <h1 className="text-2xl sm:text-3xl font-bold ">{t.testGenerators}</h1>
-        <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-md">
-          <p className="text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
-            {t.testGeneratorDescription}
-          </p>
-          <button
-            className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl shadow-lg hover:scale-105 transition"
-            onClick={() => setGenerateOpen(true)}
-          >
-            {t.createTest}
-          </button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <PageShell>
+        {isLoaded ? (
+          <PageHeader
+            icon={FileText}
+            title={t.testGenerators}
+            subtitle={t.testGeneratorDescription}
+            actions={
+              <PrimaryButton onClick={() => setGenerateOpen(true)}>
+                <Plus className="h-4 w-4" />
+                {t.createTest}
+              </PrimaryButton>
+            }
+          />
+        ) : (
+          <Skeleton width="w-64" height="h-10" />
+        )}
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-5">
           {(loading || !isLoaded) &&
             Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton
-                key={i}
-                width="w-full"
-                height="h-32"
-                className="rounded-2xl"
-              />
+              <Skeleton key={i} width="w-full" height="h-36" className="rounded-2xl" />
             ))}
+
           {!loading &&
             isLoaded &&
             tests.map((test, i) => (
-              <TestCard
+              <PageCard
                 key={i}
-                title={t.testss[test.title as keyof typeof t.testss]}
-                score={test.score}
-              />
+                className="group transition hover:border-indigo-500/30 hover:shadow-md"
+              >
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-500">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {t.testss[test.title as keyof typeof t.testss]}
+                </h3>
+                <p className="mt-2 text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                  {test.score}
+                </p>
+              </PageCard>
             ))}
         </div>
-      </div>
-      {/* {generateOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[5px]"
-          onClick={() => setGenerateOpen(false)}
-        >
-          <div
-            className="bg-white rounded-[30px] w-[60vw] h-[60vh] flex flex-col justify-center align-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <form action="">
-              <input type="file" />
-            </form>
-          </div>
-        </div>
-      )} */}
+      </PageShell>
+
       {generateOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
           onClick={() => setGenerateOpen(false)}
         >
           <div
-            className="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-3xl shadow-2xl p-8 relative animate-in fade-in zoom-in-95 duration-200"
+            className="w-full max-w-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
+          <PageCard className="relative">
             <button
+              type="button"
               onClick={() => setGenerateOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition"
+              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200"
             >
               ✕
             </button>
 
-            {/* Title */}
-            <h2 className="text-2xl font-bold mb-2">{t.createTest}</h2>
-            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
-              Создайте тест автоматически на основе темы или загрузите файл
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              {t.createTest}
+            </h2>
+            <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
+              {t.testGeneratorDescription}
             </p>
 
-            {/* Form */}
-            <form className="space-y-5">
-              {/* Topic */}
+            <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
                   Тема теста
                 </label>
-                <input
-                  type="text"
-                  placeholder="Например: Квадратные уравнения"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                />
+                <InputField placeholder="Например: Квадратные уравнения" />
               </div>
 
-              {/* Difficulty */}
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Сложность
+                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
+                  {t.difficulty}
                 </label>
-                <select className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                  <option className={style}>Лёгкая</option>
-                  <option>Средняя</option>
-                  <option>Сложная</option>
-                </select>
+                <SelectField>
+                  <option>{t.difficulties.Easy}</option>
+                  <option>{t.difficulties.Medium}</option>
+                  <option>{t.difficulties.Hard}</option>
+                </SelectField>
               </div>
 
-              {/* File Upload */}
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Загрузить файл (опционально)
+                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
+                  Файл (опционально)
                 </label>
                 <input
                   type="file"
-                  className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-500 file:text-white hover:file:bg-indigo-600 transition"
+                  className="w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-indigo-500"
                 />
               </div>
 
-              {/* Buttons */}
-              <div className="flex justify-end gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setGenerateOpen(false)}
-                  className="px-5 py-2 rounded-xl border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                >
+              <div className="flex justify-end gap-3 pt-2">
+                <SecondaryButton onClick={() => setGenerateOpen(false)}>
                   Отмена
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md hover:scale-105 transition"
-                >
-                  Сгенерировать
-                </button>
+                </SecondaryButton>
+                <PrimaryButton type="submit">{t.createTest}</PrimaryButton>
               </div>
             </form>
+          </PageCard>
           </div>
         </div>
       )}
     </>
-  );
-}
-function TestCard({ title, score }: any) {
-  return (
-    <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-md hover:shadow-xl transition">
-      <FileText className="text-indigo-500 mb-3 sm:mb-4 w-6 h-6 sm:w-8 sm:h-8" />
-      <h3 className="font-semibold text-base sm:text-lg">{title}</h3>
-      <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base dark:text-gray-400">
-        {score}
-      </p>
-    </div>
   );
 }
