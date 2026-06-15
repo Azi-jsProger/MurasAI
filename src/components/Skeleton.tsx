@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/lib/utils"; // используем утилиту cn (она у тебя есть в проекте), чтобы красиво объединять классы
+
 interface SkeletonProps {
   width?: string;
   height?: string;
@@ -15,11 +17,24 @@ export default function Skeleton({
 }: SkeletonProps) {
   return (
     <div
-      className={`relative overflow-hidden bg-gray-300 ${
-        circle ? "rounded-full" : "rounded"
-      } ${width} ${height} ${className}`}
+      className={cn(
+        "relative overflow-hidden",
+        // Цвета подложки: для светлой темы — серый, для твоей темной — глубокий slate
+        "bg-gray-200 dark:bg-slate-800/80", 
+        circle ? "rounded-full" : "rounded-xl", // rounded-xl мягче смотрится в твоем дизайне
+        width,
+        height,
+        className
+      )}
     >
-      <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+      {/* Анимация блика (Shimmer) */}
+      <div 
+        className={cn(
+          "absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-gray-100/30 to-transparent",
+          // Для темной темы делаем блик чуть мягче (белый цвет с прозрачностью 10-15%), чтобы он не резал глаза
+          "dark:via-white/10"
+        )} 
+      />
     </div>
   );
 }

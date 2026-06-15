@@ -130,7 +130,12 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
             : Array(8)
                 .fill(0)
                 .map((_, i) => (
-                  <Skeleton key={i} width="w-full" height="h-9" className="my-0.5" />
+                  <Skeleton
+                    key={i}
+                    width="w-full"
+                    height="h-9"
+                    className="my-0.5"
+                  />
                 ))}
         </nav>
 

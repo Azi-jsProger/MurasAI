@@ -4,9 +4,6 @@ import { Bot, FileText, CalendarDays, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { checkAuth } from "@/lib/api";
 import {
   ModuleCard,
   PageHeader,
@@ -17,22 +14,11 @@ import {
 export default function Dashboard() {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
-  const router = useRouter();
-
-  useEffect(() => {
-    checkAuth().then((ok) => {
-      if (!ok) router.push("/login");
-    });
-  }, [router]);
 
   return (
     <PageShell>
       {isLoaded ? (
-        <PageHeader
-          icon={Sparkles}
-          title={t.welcome}
-          subtitle={t.helperText}
-        />
+        <PageHeader icon={Sparkles} title={t.welcome} subtitle={t.helperText} />
       ) : (
         <>
           <Skeleton width="w-64" height="h-10" />
@@ -43,16 +29,37 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5">
         {isLoaded ? (
           <>
-            <StatCard title={t.avgScore} value="82%" accent="from-indigo-600 to-violet-600" />
-            <StatCard title={t.aiRating} value={t.advanced} accent="from-emerald-500 to-teal-500" />
-            <StatCard title={t.testsCompleted} value="24" accent="from-orange-500 to-pink-500" />
-            <StatCard title={t.learningHours} value={`12 ${t.hour}`} accent="from-blue-500 to-cyan-500" />
+            <StatCard
+              title={t.avgScore}
+              value="82%"
+              accent="from-indigo-600 to-violet-600"
+            />
+            <StatCard
+              title={t.aiRating}
+              value={t.advanced}
+              accent="from-emerald-500 to-teal-500"
+            />
+            <StatCard
+              title={t.testsCompleted}
+              value="24"
+              accent="from-orange-500 to-pink-500"
+            />
+            <StatCard
+              title={t.learningHours}
+              value={`12 ${t.hour}`}
+              accent="from-blue-500 to-cyan-500"
+            />
           </>
         ) : (
           Array(4)
             .fill(0)
             .map((_, i) => (
-              <Skeleton key={i} width="w-full" height="h-24" className="rounded-2xl" />
+              <Skeleton
+                key={i}
+                width="w-full"
+                height="h-24"
+                className="rounded-2xl"
+              />
             ))
         )}
       </div>
@@ -85,7 +92,12 @@ export default function Dashboard() {
           Array(3)
             .fill(0)
             .map((_, i) => (
-              <Skeleton key={i} width="w-full" height="h-40" className="rounded-2xl" />
+              <Skeleton
+                key={i}
+                width="w-full"
+                height="h-40"
+                className="rounded-2xl"
+              />
             ))
         )}
       </div>

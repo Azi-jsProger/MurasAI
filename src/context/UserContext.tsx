@@ -1,35 +1,44 @@
 "use client";
 
-import { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useState, useEffect } from "react";
+import { fetchCurrentUser } from "@/lib/api";
 
-// Интерфейс для контекста
-interface UserContextType {
+type UserContextType = {
   userName: string;
   avatarBg: string;
-}
+  loading: boolean;
+};
 
-// Создаем контекст с дефолтными значениями
 export const UserContext = createContext<UserContextType>({
-  userName: "Student S",
-  avatarBg: "6366F1",
+  userName: "Гость",
+  avatarBg: "indigo",
+  loading: true,
 });
 
-// Провайдер, который будет оборачивать все приложение
-export function UserProvider({ children }: { children: ReactNode }) {
-  const names = ["Aziret O", "Daniel K", "Beknazar T", "Emirlan N"];
-  const colors = ["6366F1", "10B981", "F59E0B", "EF4444"]; // Hex цвета для аватара
-
-  const [userName, setUserName] = useState("Student S");
-  const [avatarBg, setAvatarBg] = useState("6366F1");
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const [userName, setUserName] = useState<string>("Гость");
+  const [avatarBg, setAvatarBg] = useState<string>("6366f1"); // Дефолтный цвет indigo в HEX для аватарок
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * names.length);
-    setUserName(names[randomIndex]);
-    setAvatarBg(colors[randomIndex]);
+    async function loadUser() {
+      const name = await fetchCurrentUser();
+      if (name) {
+        setUserName(name);
+        
+        // Опционально: генерируем уникальный цвет аватарки на основе первой буквы имени
+        const colors = ["6366f1", "ec4899", "10b981", "f59e0b", "3b82f6"];
+        const charCode = name.charCodeAt(0) || 0;
+        setAvatarBg(colors[charCode % colors.length]);
+      }
+      setLoading(false);
+    }
+
+    loadUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ userName, avatarBg }}>
+    <UserContext.Provider value={{ userName, avatarBg, loading }}>
       {children}
     </UserContext.Provider>
   );

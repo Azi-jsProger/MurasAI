@@ -37,11 +37,57 @@ export async function checkAuth(): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
       credentials: "include",
+      cache: "no-store",
+      signal: AbortSignal.timeout(5000),
     });
     const text = await res.text();
     return text !== "Not logged in";
   } catch {
     return false;
+  }
+}
+
+export async function fetchCurrentUser(): Promise<string | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
+      credentials: "include", // Обязательно для cookie-сессии
+      cache: "no-store",
+    });
+
+    if (!res.ok) return null;
+
+    const text = await res.text();
+    
+    // Если бэкенд возвращает "Not logged in", значит сессии нет
+    if (text === "Not logged in") return null;
+
+    return text; // Возвращает "Aziret O"
+  } catch (error) {
+    console.error("Ошибка при получении пользователя:", error);
+    return null;
+  }
+}
+
+export type WebTestDto = {
+  titleKey: string;     // Вместо title
+  scorePercent: number; // Вместо progress
+  // Поле difficulty убираем из типа, так как бэкенд его не присылает
+};
+
+export async function get_allTest(): Promise<WebTestDto[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/tests`, {
+      credentials: "include", 
+      cache: "no-store",
+    });
+
+    if (!res.ok) throw new Error("Не удалось загрузить тесты");
+
+    const data: WebTestDto[] = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Ошибка при получении тестов:", error);
+    return [];
   }
 }
 
