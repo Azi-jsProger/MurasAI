@@ -14,8 +14,9 @@ export async function sendChat(
   messages: ChatMessage[],
 ): Promise<ChatResponse | null> {
   try {
-    const res = await fetch("/api/chat", {
+    const res = await fetch(`${API_BASE_URL}/api/chat`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages }),
     });
