@@ -12,8 +12,8 @@ async function isAuthenticated(request: NextRequest): Promise<boolean> {
       cache: "no-store",
       signal: AbortSignal.timeout(5000),
     });
-    const text = await res.text();
-    return text !== "Not logged in";
+    const data = (await res.json()) as { authenticated?: boolean };
+    return Boolean(data.authenticated);
   } catch {
     return false;
   }
@@ -55,6 +55,12 @@ export const config = {
     "/webtest/:path*",
     "/plan",
     "/plan/:path*",
+    "/admin",
+    "/admin/:path*",
+    "/director",
+    "/director/:path*",
+    "/teacher",
+    "/teacher/:path*",
     "/login",
     "/login/:path*",
   ],

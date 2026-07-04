@@ -5,6 +5,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { fetchTests, generateTest, TestResultDto } from "@/lib/api";
 import {
   InputField,
   PageCard,
@@ -20,17 +22,40 @@ export default function Tests() {
   const t = translations[language];
   const [generateOpen, setGenerateOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [tests, setTests] = useState<TestResultDto[]>([]);
+  const [topic, setTopic] = useState("");
+  const [difficulty, setDifficulty] = useState("Medium");
+  const [generating, setGenerating] = useState(false);
 
-  const tests = [
-    { title: "Algebra", score: "85%" },
-    { title: "Physics", score: "78%" },
-    { title: "Biology", score: "91%" },
-  ];
+  const loadTests = () => {
+    setLoading(true);
+    fetchTests().then((data) => {
+      setTests(data);
+      setLoading(false);
+    });
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(timer);
+    loadTests();
   }, []);
+
+  const handleGenerate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!topic.trim()) return;
+
+    setGenerating(true);
+    const result = await generateTest(topic.trim(), difficulty);
+    setGenerating(false);
+
+    if (result) {
+      setTests((prev) => [...prev, result]);
+      setGenerateOpen(false);
+      setTopic("");
+      toast.success(t.createTest, { theme: "colored" });
+    } else {
+      toast.error("Не удалось создать тест", { theme: "colored" });
+    }
+  };
 
   return (
     <>
@@ -68,10 +93,11 @@ export default function Tests() {
                   <FileText className="h-5 w-5" />
                 </div>
                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                  {t.testss[test.title as keyof typeof t.testss]}
+                  {t.testss[test.titleKey as keyof typeof t.testss] ??
+                    test.titleKey}
                 </h3>
                 <p className="mt-2 text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-                  {test.score}
+                  {test.scorePercent}%
                 </p>
               </PageCard>
             ))}
@@ -87,59 +113,62 @@ export default function Tests() {
             className="w-full max-w-lg"
             onClick={(e) => e.stopPropagation()}
           >
-          <PageCard className="relative">
-            <button
-              type="button"
-              onClick={() => setGenerateOpen(false)}
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200"
-            >
-              ✕
-            </button>
+            <PageCard className="relative">
+              <button
+                type="button"
+                onClick={() => setGenerateOpen(false)}
+                className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:hover:text-slate-200"
+              >
+                ✕
+              </button>
 
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              {t.createTest}
-            </h2>
-            <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
-              {t.testGeneratorDescription}
-            </p>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {t.createTest}
+              </h2>
+              <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
+                {t.testGeneratorDescription}
+              </p>
 
-            <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
-                  Тема теста
-                </label>
-                <InputField placeholder="Например: Квадратные уравнения" />
-              </div>
+              <form className="mt-6 space-y-4" onSubmit={handleGenerate}>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
+                    Тема теста
+                  </label>
+                  <InputField
+                    placeholder="Например: Квадратные уравнения"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
-                  {t.difficulty}
-                </label>
-                <SelectField>
-                  <option>{t.difficulties.Easy}</option>
-                  <option>{t.difficulties.Medium}</option>
-                  <option>{t.difficulties.Hard}</option>
-                </SelectField>
-              </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
+                    {t.difficulty}
+                  </label>
+                  <SelectField
+                    value={difficulty}
+                    onChange={(e) => setDifficulty(e.target.value)}
+                  >
+                    <option value="Easy">{t.difficulties.Easy}</option>
+                    <option value="Medium">{t.difficulties.Medium}</option>
+                    <option value="Hard">{t.difficulties.Hard}</option>
+                  </SelectField>
+                </div>
 
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-slate-300">
-                  Файл (опционально)
-                </label>
-                <input
-                  type="file"
-                  className="w-full text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-indigo-500"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-2">
-                <SecondaryButton onClick={() => setGenerateOpen(false)}>
-                  Отмена
-                </SecondaryButton>
-                <PrimaryButton type="submit">{t.createTest}</PrimaryButton>
-              </div>
-            </form>
-          </PageCard>
+                <div className="flex justify-end gap-3 pt-2">
+                  <SecondaryButton
+                    type="button"
+                    onClick={() => setGenerateOpen(false)}
+                  >
+                    Отмена
+                  </SecondaryButton>
+                  <PrimaryButton type="submit" disabled={generating}>
+                    {generating ? "..." : t.createTest}
+                  </PrimaryButton>
+                </div>
+              </form>
+            </PageCard>
           </div>
         </div>
       )}

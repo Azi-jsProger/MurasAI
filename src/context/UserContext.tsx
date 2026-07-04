@@ -1,35 +1,48 @@
 "use client";
 
 import React, { createContext, useState, useEffect } from "react";
-import { fetchCurrentUser } from "@/lib/api";
+import { fetchAuthMe, fetchUserProfile } from "@/lib/api";
 
 type UserContextType = {
   userName: string;
   avatarBg: string;
+  aiRatingKey: string;
+  aiGrade: string;
+  roles: string[];
+  hasRole: (...roles: string[]) => boolean;
   loading: boolean;
 };
 
 export const UserContext = createContext<UserContextType>({
   userName: "Гость",
-  avatarBg: "indigo",
+  avatarBg: "6366f1",
+  aiRatingKey: "advanced",
+  aiGrade: "A+",
+  roles: [],
+  hasRole: () => false,
   loading: true,
 });
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [userName, setUserName] = useState<string>("Гость");
-  const [avatarBg, setAvatarBg] = useState<string>("6366f1"); // Дефолтный цвет indigo в HEX для аватарок
-  const [loading, setLoading] = useState<boolean>(true);
+  const [userName, setUserName] = useState("Гость");
+  const [avatarBg, setAvatarBg] = useState("6366f1");
+  const [aiRatingKey, setAiRatingKey] = useState("advanced");
+  const [aiGrade, setAiGrade] = useState("A+");
+  const [roles, setRoles] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadUser() {
-      const name = await fetchCurrentUser();
-      if (name) {
-        setUserName(name);
-        
-        // Опционально: генерируем уникальный цвет аватарки на основе первой буквы имени
-        const colors = ["6366f1", "ec4899", "10b981", "f59e0b", "3b82f6"];
-        const charCode = name.charCodeAt(0) || 0;
-        setAvatarBg(colors[charCode % colors.length]);
+      // roles live on /api/auth/me now (cookie-auth aware)
+      const me = await fetchAuthMe();
+      if (me?.authenticated && me.roles) setRoles(me.roles);
+
+      const profile = await fetchUserProfile();
+      if (profile) {
+        setUserName(profile.userName);
+        setAvatarBg(profile.avatarBg.replace("#", ""));
+        setAiRatingKey(profile.aiRatingKey);
+        setAiGrade(profile.aiGrade);
       }
       setLoading(false);
     }
@@ -37,8 +50,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     loadUser();
   }, []);
 
+  const hasRole = (...need: string[]) => need.some((r) => roles.includes(r));
+
   return (
-    <UserContext.Provider value={{ userName, avatarBg, loading }}>
+    <UserContext.Provider
+      value={{ userName, avatarBg, aiRatingKey, aiGrade, roles, hasRole, loading }}
+    >
       {children}
     </UserContext.Provider>
   );

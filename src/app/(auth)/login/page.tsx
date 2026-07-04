@@ -74,6 +74,18 @@ export default function LoginPage() {
             {loading ? "..." : "Войти"}
           </PrimaryButton>
         </form>
+
+        <div className="mt-6 rounded-xl border border-gray-200/80 bg-gray-50 p-4 text-xs text-gray-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+          <p className="mb-2 font-medium text-gray-700 dark:text-slate-300">Демо-аккаунты (пароль: password123)</p>
+          <ul className="space-y-1">
+            <li>supadmin@muras.ai — Супер-админ</li>
+            <li>admin@muras.ai — Администратор</li>
+            <li>director@muras.ai — Директор</li>
+            <li>teacher@muras.ai — Учитель</li>
+            <li>student@muras.ai — Ученик</li>
+            <li>secretary@muras.ai — Секретарь</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

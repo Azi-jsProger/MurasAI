@@ -16,17 +16,22 @@ import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { pageCardClass } from "@/components/ui/page-shell";
 import { cn } from "@/lib/utils";
+import { SubjectScoreDto } from "@/lib/api";
 
-const subjectData = [
-  { subject: "Math", score: 85 },
-  { subject: "Physics", score: 70 },
-  { subject: "Biology", score: 92 },
-  { subject: "Chemistry", score: 75 },
+const FALLBACK = [
+  { subjectKey: "Math", score: 85, colorIndex: 0 },
+  { subjectKey: "Physics", score: 70, colorIndex: 1 },
+  { subjectKey: "Biology", score: 92, colorIndex: 2 },
+  { subjectKey: "Chemistry", score: 75, colorIndex: 3 },
 ];
 
 const COLORS = ["#6366F1", "#10B981", "#F59E0B", "#EF4444"];
 
-export default function SubjectChart() {
+type Props = {
+  data?: SubjectScoreDto[];
+};
+
+export default function SubjectChart({ data }: Props) {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
 
@@ -40,10 +45,10 @@ export default function SubjectChart() {
 
   if (!isLoaded) return <Skeleton width="w-full" height="h-64" className="rounded-2xl" />;
 
-  // Перевод названий предметов
-  const translatedData = subjectData.map((s) => ({
+  const translatedData = (data ?? FALLBACK).map((s) => ({
     ...s,
-    subject: t.subjects[s.subject as keyof typeof t.subjects] || s.subject,
+    subject:
+      t.subjects[s.subjectKey as keyof typeof t.subjects] || s.subjectKey,
   }));
 
   return (
@@ -53,12 +58,12 @@ export default function SubjectChart() {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={translatedData} margin={{ top: 10, right: 20, left: 0, bottom: isMobile ? 40 : 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-            <XAxis  dataKey="subject" interval={0} textAnchor={isMobile ? "end" : "middle"} tick={{ fontSize: isMobile ? 11 : 13 }} />
+            <XAxis dataKey="subject" interval={0} textAnchor={isMobile ? "end" : "middle"} tick={{ fontSize: isMobile ? 11 : 13 }} />
             <YAxis tick={{ fontSize: isMobile ? 11 : 14 }} width={isMobile ? 30 : 40} />
             <Tooltip labelClassName="text-black"/>
             <Bar dataKey="score" radius={[12, 12, 0, 0]}>
               {translatedData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={COLORS[entry.colorIndex % COLORS.length]} />
               ))}
             </Bar>
           </BarChart>

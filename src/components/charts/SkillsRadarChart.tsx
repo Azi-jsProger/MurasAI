@@ -14,16 +14,21 @@ import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { pageCardClass } from "@/components/ui/page-shell";
 import { cn } from "@/lib/utils";
+import { SkillPointDto } from "@/lib/api";
 
-const skillsData = [
-  { skill: "Logic", value: 85 },
-  { skill: "Creativity", value: 75 },
-  { skill: "Memory", value: 90 },
-  { skill: "Speed", value: 70 },
-  { skill: "Analysis", value: 88 },
+const FALLBACK = [
+  { skillKey: "Logic", value: 85 },
+  { skillKey: "Creativity", value: 75 },
+  { skillKey: "Memory", value: 90 },
+  { skillKey: "Speed", value: 70 },
+  { skillKey: "Analysis", value: 88 },
 ];
 
-export default function SkillsRadarChart() {
+type Props = {
+  data?: SkillPointDto[];
+};
+
+export default function SkillsRadarChart({ data }: Props) {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
 
@@ -37,10 +42,9 @@ export default function SkillsRadarChart() {
 
   if (!isLoaded) return <Skeleton width="w-full" height="h-64" className="rounded-2xl" />;
 
-  // Перевод навыков
-  const translatedSkills = skillsData.map((s) => ({
+  const translatedSkills = (data ?? FALLBACK).map((s) => ({
     ...s,
-    skill: t.skills[s.skill as keyof typeof t.skills] || s.skill,
+    skill: t.skills[s.skillKey as keyof typeof t.skills] || s.skillKey,
   }));
 
   return (
@@ -49,8 +53,8 @@ export default function SkillsRadarChart() {
       <div className="h-[260px] sm:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={translatedSkills} outerRadius={isMobile ? "54%" : "80%"}>
-            <PolarGrid stroke="#e5e7eb"  />
-            <PolarAngleAxis dataKey="skill"  tick={{ fontSize: isMobile ? 11 : 14, fill: "#6b7280" }} />
+            <PolarGrid stroke="#e5e7eb" />
+            <PolarAngleAxis dataKey="skill" tick={{ fontSize: isMobile ? 11 : 14, fill: "#6b7280" }} />
             <PolarRadiusAxis tick={{ fontSize: isMobile ? 10 : 12, fill: "#6b7280" }} />
             <Radar dataKey="value" stroke="#8B5CF6" fill="#8B5CF6" fillOpacity={0.6} />
           </RadarChart>

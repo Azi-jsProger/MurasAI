@@ -6,6 +6,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import icon from "../../public/murasAI_icon.jpg";
 import { useState, useContext } from "react";
+import { logout } from "@/lib/api";
+import { NAV_ITEMS, primaryRole, canAccess } from "@/lib/roles";
+import { translateKey } from "@/lib/i18n";
 import {
   Settings,
   LogOut,
@@ -18,33 +21,38 @@ import {
   ClipboardList,
   Bot,
   BookOpen,
+  Shield,
+  Building2,
+  GraduationCap,
 } from "lucide-react";
 import { UserContext } from "@/context/UserContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "./Skeleton";
 import { useTheme } from "@/context/ThemeContext";
-import { logout } from "@/lib/api";
 
 interface SidebarProps {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-const navItems = [
-  { href: "/", icon: Home, labelKey: "home" as const },
-  { href: "/schedule", icon: CalendarDays, labelKey: "schedule" as const },
-  { href: "/chat", icon: Bot, labelKey: "chat" as const },
-  { href: "/personal", icon: User, labelKey: "personal" as const },
-  { href: "/analytics", icon: BarChart3, labelKey: "analytics" as const },
-  { href: "/tests", icon: FileText, labelKey: "tests" as const },
-  { href: "/webtest", icon: ClipboardList, labelKey: "webtest" as const },
-  { href: "/plan", icon: BookOpen, labelKey: "plan" as const },
-];
+const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  "/": Home,
+  "/schedule": CalendarDays,
+  "/chat": Bot,
+  "/personal": User,
+  "/analytics": BarChart3,
+  "/tests": FileText,
+  "/webtest": ClipboardList,
+  "/plan": BookOpen,
+  "/teacher": GraduationCap,
+  "/director": Building2,
+  "/admin": Shield,
+};
 
 export default function Sidebar({ open, setOpen }: SidebarProps) {
   const pathname = usePathname();
-  const { userName, avatarBg } = useContext(UserContext);
+  const { userName, avatarBg, roles } = useContext(UserContext);
   const [profileOpen, setProfileOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -116,17 +124,21 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
 
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3 sm:p-4">
           {isLoaded
-            ? navItems.map(({ href, icon: Icon, labelKey }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className={linkClass(href)}
-                >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  {t[labelKey]}
-                </Link>
-              ))
+            ? NAV_ITEMS.filter((item) => canAccess(roles, item.roles)).map(
+                ({ href, labelKey }) => {
+                  const Icon = ICONS[href] ?? Home;
+                  return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setOpen(false)}
+                    className={linkClass(href)}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {t[labelKey as keyof typeof t] as string}
+                  </Link>
+                );},
+              )
             : Array(8)
                 .fill(0)
                 .map((_, i) => (
@@ -161,7 +173,7 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                     {userName.split(" ")[0]}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-slate-400">
-                    {t.student}
+                    {translateKey(t, primaryRole(roles))}
                   </p>
                 </>
               ) : (

@@ -15,17 +15,27 @@ import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { pageCardClass } from "@/components/ui/page-shell";
 import { cn } from "@/lib/utils";
+import { ProgressPointDto } from "@/lib/api";
 
-export default function ProgressChart() {
+const FALLBACK = [
+  { weekOrder: 1, score: 60 },
+  { weekOrder: 2, score: 72 },
+  { weekOrder: 3, score: 78 },
+  { weekOrder: 4, score: 85 },
+];
+
+type Props = {
+  data?: ProgressPointDto[];
+};
+
+export default function ProgressChart({ data }: Props) {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
 
-  const data = [
-    { week: `1 ${t.week}`, score: 60 },
-    { week: `2 ${t.week}`, score: 72 },
-    { week: `3 ${t.week}`, score: 78 },
-    { week: `4 ${t.week}`, score: 85 },
-  ];
+  const chartData = (data ?? FALLBACK).map((p) => ({
+    week: `${p.weekOrder} ${t.week}`,
+    score: p.score,
+  }));
 
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -46,7 +56,7 @@ export default function ProgressChart() {
       <div className="h-[220px] sm:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={data}
+            data={chartData}
             margin={{ top: 10, right: 40, left: 0, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />

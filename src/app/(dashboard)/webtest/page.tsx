@@ -13,26 +13,20 @@ import {
   PrimaryButton,
 } from "@/components/ui/page-shell";
 import { cn } from "@/lib/utils";
-// Импортируем функцию и её тип
-import { get_allTest, WebTestDto } from "@/lib/api";
+import { fetchWebTests, WebTestDto } from "@/lib/api";
 
 export default function WebTest() {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
 
-  // Инициализируем пустым массивом, куда попадут данные из БД
   const [tests, setTests] = useState<WebTestDto[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadTests() {
-      setLoading(true);
-      const data = await get_allTest(); // Здесь теперь улетит запрос с куками
-      setTests(data);                   // Записываем полученный массив в стейт
+    fetchWebTests().then((data) => {
+      setTests(data);
       setLoading(false);
-    }
-
-    loadTests();
+    });
   }, []);
 
   const showToast = () => {
@@ -66,27 +60,27 @@ export default function WebTest() {
           : tests.map((test, i) => (
               <PageCard key={i} className="flex flex-col">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {/* Заменяем test.title на test.titleKey */}
                   {t.webtesting[test.titleKey as keyof typeof t.webtesting] ||
                     test.titleKey}
                 </h2>
-                
-                {/* Бэкенд не шлет сложность, можно захардкодить дефолтную или скрыть */}
+
                 <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">
-                  {t.difficulty}: {t.difficulties["Medium"]}
+                  {t.difficulty}:{" "}
+                  {t.difficulties[
+                    test.difficultyKey as keyof typeof t.difficulties
+                  ] ?? test.difficultyKey}
                 </p>
 
-                {/* Заменяем test.progress на test.scorePercent */}
                 <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-slate-700">
                   <div
                     className={cn(
                       "h-full rounded-full bg-gradient-to-r from-indigo-600 to-violet-600 transition-all",
                     )}
-                    style={{ width: `${test.scorePercent}%` }}
+                    style={{ width: `${test.progressPercent}%` }}
                   />
                 </div>
                 <p className="mt-1 text-right text-xs text-gray-400">
-                  {test.scorePercent}%
+                  {test.progressPercent}%
                 </p>
 
                 <PrimaryButton className="mt-4 w-full" onClick={showToast}>
@@ -97,7 +91,7 @@ export default function WebTest() {
       </div>
 
       {!loading && tests.length === 0 && (
-        <div className="text-center text-gray-500 mt-10">
+        <div className="mt-10 text-center text-gray-500">
           У вас пока нет доступных тестов.
         </div>
       )}

@@ -7,18 +7,28 @@ import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { BarChart3 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AnalyticsDto, fetchAnalytics } from "@/lib/api";
+import { translateKey } from "@/lib/i18n";
 import { PageHeader, PageShell, StatCard } from "@/components/ui/page-shell";
 
 export default function AnalyticsPage() {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
+  const [analytics, setAnalytics] = useState<AnalyticsDto | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const stats = [
-    { title: t.avgScore, value: "82%", accent: "from-indigo-600 to-violet-600" },
-    { title: t.aiRating, value: t.advanced, accent: "from-emerald-500 to-teal-500" },
-    { title: t.testsCompleted, value: "24", accent: "from-orange-500 to-pink-500" },
-    { title: t.learningHours, value: `12 ${t.hour}`, accent: "from-blue-500 to-cyan-500" },
-  ];
+  useEffect(() => {
+    fetchAnalytics().then((data) => {
+      setAnalytics(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const stats = analytics?.stats;
+  const ratingLabel = stats
+    ? translateKey(t, stats.aiRatingKey)
+    : "";
 
   return (
     <PageShell>
@@ -33,14 +43,14 @@ export default function AnalyticsPage() {
       )}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5">
-        {isLoaded
-          ? stats.map((card, i) => (
-              <StatCard
-                key={i}
-                title={card.title}
-                value={card.value}
-                accent={card.accent}
-              />
+        {isLoaded && !loading && stats
+          ? [
+              { title: t.avgScore, value: `${stats.avgScorePercent}%`, accent: "from-indigo-600 to-violet-600" },
+              { title: t.aiRating, value: ratingLabel, accent: "from-emerald-500 to-teal-500" },
+              { title: t.testsCompleted, value: String(stats.testsCompleted), accent: "from-orange-500 to-pink-500" },
+              { title: t.learningHours, value: `${stats.learningHours} ${t.hour}`, accent: "from-blue-500 to-cyan-500" },
+            ].map((card, i) => (
+              <StatCard key={i} title={card.title} value={card.value} accent={card.accent} />
             ))
           : Array(4)
               .fill(0)
@@ -50,10 +60,10 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
-        {isLoaded ? (
+        {isLoaded && !loading ? (
           <>
-            <ProgressChart />
-            <SubjectChart />
+            <ProgressChart data={analytics?.progress} />
+            <SubjectChart data={analytics?.subjects} />
           </>
         ) : (
           Array(2)
@@ -64,8 +74,8 @@ export default function AnalyticsPage() {
         )}
       </div>
 
-      {isLoaded ? (
-        <SkillsRadarChart />
+      {isLoaded && !loading ? (
+        <SkillsRadarChart data={analytics?.skills} />
       ) : (
         <Skeleton width="w-full" height="h-72" className="rounded-2xl" />
       )}

@@ -1,17 +1,30 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/UserContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { Brain, User } from "lucide-react";
+import { fetchStats, StatsDto } from "@/lib/api";
+import { translateKey } from "@/lib/i18n";
 import { PageCard, PageHeader, PageShell, StatCard } from "@/components/ui/page-shell";
 
 export default function Personal() {
-  const { userName, avatarBg } = useContext(UserContext);
+  const { userName, avatarBg, aiRatingKey, aiGrade } = useContext(UserContext);
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
+  const [stats, setStats] = useState<StatsDto | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats().then((data) => {
+      setStats(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const ratingLabel = translateKey(t, aiRatingKey);
 
   return (
     <PageShell>
@@ -46,7 +59,7 @@ export default function Personal() {
                 {t.studentRole}
               </p>
               <span className="mt-4 inline-flex rounded-full bg-indigo-500/10 px-4 py-1.5 text-sm font-medium text-indigo-600 ring-1 ring-indigo-500/30 dark:text-indigo-400">
-                {t.aiLevel}: {t.advanced}
+                {t.aiLevel}: {ratingLabel}
               </span>
             </>
           ) : (
@@ -59,12 +72,12 @@ export default function Personal() {
       </PageCard>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5">
-        {isLoaded ? (
+        {isLoaded && !loading && stats ? (
           <>
-            <StatCard title={t.testsCompleted} value="24" accent="from-indigo-600 to-violet-600" />
-            <StatCard title={t.avgScore} value="82%" accent="from-emerald-500 to-teal-500" />
-            <StatCard title={t.learningHours} value={`12 ${t.hour}`} accent="from-orange-500 to-pink-500" />
-            <StatCard title={t.aiRating} value="A+" accent="from-blue-500 to-cyan-500" />
+            <StatCard title={t.testsCompleted} value={String(stats.testsCompleted)} accent="from-indigo-600 to-violet-600" />
+            <StatCard title={t.avgScore} value={`${stats.avgScorePercent}%`} accent="from-emerald-500 to-teal-500" />
+            <StatCard title={t.learningHours} value={`${stats.learningHours} ${t.hour}`} accent="from-orange-500 to-pink-500" />
+            <StatCard title={t.aiRating} value={aiGrade} accent="from-blue-500 to-cyan-500" />
           </>
         ) : (
           Array(4)

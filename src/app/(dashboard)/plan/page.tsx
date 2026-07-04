@@ -5,25 +5,22 @@ import { translations } from "@/locales";
 import Skeleton from "@/components/Skeleton";
 import { useEffect, useState } from "react";
 import { BookOpen, CheckCircle2 } from "lucide-react";
+import { fetchStudyPlan, StudyPlanItemDto } from "@/lib/api";
+import { translateKey } from "@/lib/i18n";
 import { PageCard, PageHeader, PageShell } from "@/components/ui/page-shell";
 import { cn } from "@/lib/utils";
 
 export default function StudyPlan() {
   const { language, isLoaded } = useLanguage();
   const t = translations[language];
+  const [plan, setPlan] = useState<StudyPlanItemDto[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const plan = [
-    { day: t.day1, task: t.task1 },
-    { day: t.day2, task: t.task2 },
-    { day: t.day3, task: t.task3 },
-    { day: t.day4, task: t.task4 },
-    { day: t.day5, task: t.task5 },
-  ];
-
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(timer);
+    fetchStudyPlan().then((data) => {
+      setPlan(data);
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -50,15 +47,15 @@ export default function StudyPlan() {
         {!loading &&
           isLoaded &&
           plan.map((item, i) => (
-            <div key={i} className="flex gap-4">
+            <div key={item.sortOrder} className="flex gap-4">
               <div className="flex flex-col items-center">
                 <div
                   className={cn(
                     "flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600/20 text-indigo-500 ring-1 ring-indigo-500/40",
-                    i === 0 && "bg-indigo-600 text-white ring-0",
+                    item.completed && "bg-indigo-600 text-white ring-0",
                   )}
                 >
-                  {i < 2 ? (
+                  {item.completed ? (
                     <CheckCircle2 className="h-4 w-4" />
                   ) : (
                     <span className="text-xs font-bold">{i + 1}</span>
@@ -71,10 +68,10 @@ export default function StudyPlan() {
 
               <PageCard className="flex-1">
                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                  {item.day}
+                  {translateKey(t, item.dayKey)}
                 </h3>
                 <p className="mt-2 text-sm text-gray-600 dark:text-slate-400">
-                  {item.task}
+                  {translateKey(t, item.taskKey)}
                 </p>
               </PageCard>
             </div>
